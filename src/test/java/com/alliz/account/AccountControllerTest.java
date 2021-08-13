@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,7 +54,8 @@ class AccountControllerTest {
                 .param("passwordConfirm", "111"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/sign-up"))
-                .andExpect(model().hasErrors());
+                .andExpect(model().hasErrors())
+                .andExpect(unauthenticated());
     }
 
     @DisplayName("회원가입 - 정상")
@@ -68,7 +71,8 @@ class AccountControllerTest {
                         .param("passwordConfirm", password))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername("user"));
 
         Account account = accountRepository.findByEmail(email);
         assertNotNull(account);
@@ -82,9 +86,8 @@ class AccountControllerTest {
     @Test
     void signUp_email_check_token_verified_correct() throws Exception {
         SignUpForm signUpForm = createSignUpForm();
-        accountService.processNewAccount(signUpForm);
+        Account account = accountService.processNewAccount(signUpForm);
 
-        Account account = accountRepository.findByEmail("user@email.com");
         mockMvc.perform(get("/check-email-token")
                         .param("token", account.getEmailCheckToken())
                         .param("email", account.getEmail()))
@@ -92,7 +95,8 @@ class AccountControllerTest {
                 .andExpect(view().name("account/checked-email"))
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(model().attributeExists("numberOfUser"))
-                .andExpect(model().attributeExists("nickname"));
+                .andExpect(model().attributeExists("nickname"))
+                .andExpect(authenticated().withUsername("user"));
 
         assertTrue(account.isEmailVerified());
         assertNotNull(account.getJoinedAt());
@@ -102,15 +106,15 @@ class AccountControllerTest {
     @Test
     void signUp_email_check_token_verified_error() throws Exception {
         SignUpForm signUpForm = createSignUpForm();
-        accountService.processNewAccount(signUpForm);
+        Account account = accountService.processNewAccount(signUpForm);
 
-        Account account = accountRepository.findByEmail("user@email.com");
         mockMvc.perform(get("/check-email-token")
                         .param("token", "abcabc")
                         .param("email", account.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/checked-email"))
-                .andExpect(model().attribute("error","wrong.token"));
+                .andExpect(model().attribute("error","wrong.token"))
+                .andExpect(unauthenticated());
 
         assertFalse(account.isEmailVerified());
         assertNull(account.getJoinedAt());
