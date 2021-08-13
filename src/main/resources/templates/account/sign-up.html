@@ -1,57 +1,115 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Login Alliz</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">    <meta charset="UTF-8">
     <style>
         .container{
-            .max-width: 100%;
+        .max-width: 100%;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animsition/4.0.1/css/animsition.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.9/css/select2.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="css/util.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
 </head>
-<body class="bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-            <form class="needs-validation col-sm-6" th:action="@{/sign-up}" th:object="${signUpForm}" method="post">
-                <div class="form-group">
-                    <label for="email">이메일</label>
-                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
-                    th:field="*{email}" required>
-                    <small id="emailHelp" class="form-text text-muted">알리지는 사용자의 이메일을 공개하지 않습니다.</small>
-                    <small class="invalid-feedback">이메일을 입력하세요.</small>
-                    <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email</small>
+<body style="background-color: #666666;">
+
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <form class="needs-validation login100-form validate-form" th:action="@{/sign-up}" th:object="${signUpForm}" method="post">
+                <span class="login100-form-title p-b-43">
+                    SIGN UP
+                </span>
+
+                <div class="form-group wrap-input100 validate-input" data-validate = "이메일 형식에 맞지 않습니다.">
+                    <input type="email" class="input100" name="email" id="email" aria-describedby="emailHelp"
+                           th:field="*{email}" required>
+                    <span class="focus-input100"></span>
+                    <span class="label-input100">Email</span>
                 </div>
-                <div class="form-group">
-                    <label for="nickname">닉네임</label>
-                    <input type="text" class="form-control" id="nickname" aria-describedby="nicknameHelp"
+                <small class="form-text text-danger text-center" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email</small>
+                <br th:if="${#fields.hasErrors('email')}">
+
+                <div class="form-group wrap-input100 validate-input" data-validate="닉네임을 입력하세요.">
+                    <input type="text" class="input100" name="nickname" id="nickname" aria-describedby="nicknameHelp"
                            th:field="*{nickname}" required>
-                    <small id="nicknameHelp" class="form-text text-muted">공백없이 문자와 숫자로만 3~20자로 입력하세요. 가입 후 변경 가능합니다.</small>
-                    <small class="invalid-feedback">닉네임을 입력하세요.</small>
-                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname</small>
+                    <span class="focus-input100"></span>
+                    <span class="label-input100">Nickname</span>
                 </div>
-                <div class="form-group">
-                    <label for="password">패스워드</label>
-                    <input type="text" class="form-control" id="password" aria-describedby="passwordHelp"
+                <small class="form-text text-danger text-center" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname</small>
+                <br th:if="${#fields.hasErrors('nickname')}">
+
+                <div class="form-group wrap-input100 validate-input" data-validate="패스워드를 입력하세요.">
+                    <input type="password" class="input100" name="password" id="password" aria-describedby="passwordHelp"
                            th:field="*{password}" required>
-                    <small id="passwordHelp" class="form-text text-muted">알리지는 사용자의 패스워드를 공개하지 않습니다. 8글자 이상 입력해주세요.</small>
-                    <small class="invalid-feedback">패스워드를 입력하세요.</small>
-                    <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password</small>
+                    <span class="focus-input100"></span>
+                    <span class="label-input100">Password</span>
                 </div>
-                <div class="form-group">
-                    <label for="passwordConfirm">패스워드 확인</label>
-                    <input type="text" class="form-control" id="passwordConfirm" aria-describedby="passwordConfirmHelp"
+                <small class="form-text text-danger text-center" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password</small>
+                <br th:if="${#fields.hasErrors('password')}">
+
+                <div class="form-group wrap-input100 validate-input" data-validate="패스워드를 한번 더 입력하세요.">
+                    <input type="password" class="input100" name="passwordConfirm" id="passwordConfirm" aria-describedby="passwordConfirmHelp"
                            th:field="*{passwordConfirm}" required>
-                    <small id="passwordConfirmHelp" class="form-text text-muted">위에서 입력한 패스워드를 한번 더 입력해주세요.</small>
-                    <small class="invalid-feedback">패스워드를 한번 더 입력하세요.</small>
-                    <small class="form-text text-danger" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">passwordConfirm</small>
+                    <span class="focus-input100"></span>
+                    <span class="label-input100">PasswordConfirm</span>
                 </div>
-                <button type="submit" class="btn btn-primary">Join</button>
+                <small class="form-text text-danger text-center" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">PasswordConfirm</small>
+                <br th:if="${#fields.hasErrors('passwordConfirm')}">
+
+                <div class="flex-sb-m w-full p-t-3 p-b-32">
+                    <div class="contact100-form-checkbox">
+                    </div>
+
+                    <div>
+                        <a href="#" class="txt1">
+                            이미 회원이신가요?
+                        </a>
+                    </div>
+                </div>
+                <div class="container-login100-form-btn">
+                    <button type="submit" class="login100-form-btn">
+                        SIGN UP
+                    </button>
+                </div>
+                <!--<div class="text-center p-t-46 p-b-20">
+						<span class="txt2">
+							or sign up using
+						</span>
+                </div>-->
             </form>
+
+            <div class="login100-more" style="background-image: url('images/bg-01.jpg');">
+            </div>
         </div>
     </div>
+</div>
 
+<!--===============================================================================================-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!--===============================================================================================-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animsition/3.2.1/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.9/js/select2.min.js"></script>
+<!--===============================================================================================-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<!--===============================================================================================-->
+<script src="js/main.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>
