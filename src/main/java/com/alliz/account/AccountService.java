@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountService {
     private final AccountRepository repository;
     private final JavaMailSender javaMailSender;
