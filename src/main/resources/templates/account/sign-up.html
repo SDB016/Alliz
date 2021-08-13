@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Login Alliz</title>
     <meta charset="UTF-8">
@@ -23,7 +23,7 @@
 
 </head>
 <body style="background-color: #666666;">
-
+<nav th:replace="fragments.html::main-nav"></nav>
 <div class="limiter">
     <div class="container-login100">
         <div class="wrap-login100">
