@@ -11,12 +11,12 @@
 <body class="bg-light">
     <div class="container">
         <div class="row justify-content-center">
-            <form class="needs-validation col-sm-6" th:action="@{/sign-up}" th:object="${signUpForm}" method="post" novalidate>
+            <form class="needs-validation col-sm-6" th:action="@{/sign-up}" th:object="${signUpForm}" method="post">
                 <div class="form-group">
                     <label for="email">이메일</label>
                     <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
                     th:field="*{email}" required>
-                    <small id="emailHelp" class="form-text text-muted">Alliz는 사용자의 이메일을 공개하지 않습니다.</small>
+                    <small id="emailHelp" class="form-text text-muted">알리지는 사용자의 이메일을 공개하지 않습니다.</small>
                     <small class="invalid-feedback">이메일을 입력하세요.</small>
                     <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email</small>
                 </div>
@@ -32,7 +32,7 @@
                     <label for="password">패스워드</label>
                     <input type="text" class="form-control" id="password" aria-describedby="passwordHelp"
                            th:field="*{password}" required>
-                    <small id="passwordHelp" class="form-text text-muted">Alliz는 사용자의 패스워드를 공개하지 않습니다. 8글자 이상 입력해주세요.</small>
+                    <small id="passwordHelp" class="form-text text-muted">알리지는 사용자의 패스워드를 공개하지 않습니다. 8글자 이상 입력해주세요.</small>
                     <small class="invalid-feedback">패스워드를 입력하세요.</small>
                     <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password</small>
                 </div>
