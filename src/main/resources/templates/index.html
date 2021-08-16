@@ -1,17 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
->
-<head>
-    <meta charset="UTF-8">
-    <title>Alliz</title>
-    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
-    <style>
-        .container {
-            max-width: 100%;
-        }
-    </style>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
 <body class="bg-light">
     <div th:replace="fragments.html::main-nav"></div>
     <div class="container">
