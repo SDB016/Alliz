@@ -1,6 +1,7 @@
 package com.alliz.domain;
 
 import lombok.*;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +30,8 @@ public class Account {
 
     private String emailCheckToken;
 
+    private LocalDateTime emailCheckTokenGeneratedAt;
+
     private LocalDateTime joinedAt;
 
     @OneToMany(mappedBy = "account")
@@ -45,6 +48,7 @@ public class Account {
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailCheckTokenGeneratedAt = LocalDateTime.now();
     }
 
     public void completeSignUp() {
@@ -54,5 +58,9 @@ public class Account {
 
     public boolean isValidToken(String token) {
         return this.getEmailCheckToken().equals(token);
+    }
+
+    public boolean canSendConfirmEmail() {
+        return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusMinutes(30));
     }
 }

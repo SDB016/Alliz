@@ -24,7 +24,6 @@ public class AccountService {
 
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
-        newAccount.generateEmailCheckToken();
         sendSignUpConfirmEmail(newAccount);
         return newAccount;
     }
@@ -39,7 +38,9 @@ public class AccountService {
         return repository.save(account);
     }
 
-    private void sendSignUpConfirmEmail(Account newAccount) {
+    public void sendSignUpConfirmEmail(Account newAccount) {
+        newAccount.generateEmailCheckToken();
+
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(newAccount.getEmail());
         mailMessage.setSubject("알리지, 회원 가입 인증");
@@ -55,4 +56,5 @@ public class AccountService {
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));
         SecurityContextHolder.getContext().setAuthentication(token);
     }
+
 }
