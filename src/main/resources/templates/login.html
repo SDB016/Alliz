@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head (page='login')"></head>
+<body style="background-color: #666666;">
+<nav th:replace="fragments.html::main-nav"></nav>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <form class="needs-validation login100-form validate-form"th:action="@{/login}" method="post">
+                        <span class="login100-form-title p-b-43">
+                            LOGIN
+                        </span>
+                    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                        <p>로그인 정보가 잘못되거나 없는 사용자입니다.</p>
+                        <p>확인 후 다시 입력하시거나, <a th:href="@{/findpassword}">패스워드 찾기</a>를 이용하세요.</p>
+                    </div>
+                    <div class="form-group wrap-input100 validate-input" data-validate = "이메일 형식에 맞지 않습니다.">
+                        <input type="text" class="input100" name="username" id="username" aria-describedby="usernameHelp" required>
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">Username</span>
+                        <small class="invalid-feedback">이메일 또는 닉네임을 입력하세요.</small>
+                    </div>
+                    <div class="form-group wrap-input100 validate-input" data-validate="패스워드를 입력하세요.">
+                        <input type="password" class="input100" name="password" id="password" aria-describedby="passwordHelp" required>
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">Password</span>
+                        <small class="invalid-feedback">이메일 또는 닉네임을 입력하세요.</small>
+                    </div>
+                    <div class="flex-sb-m w-full p-t-3 p-b-32">
+                        <div class="contact100-form-checkbox">
+                            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+                            <label class="label-checkbox100" for="ckb1">
+                                로그인 유지
+                            </label>
+                        </div>
+
+                        <div>
+                            <a th:href="@{/findpassword}" class="txt1">
+                                비밀번호 찾기&emsp;
+                            </a>
+                            <a th:href="@{/sign-up}" class="txt1">
+                                회원 가입
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn">
+                            Login
+                        </button>
+                    </div>
+
+                    <!--<div class="text-center p-t-46 p-b-20">
+                            <span class="txt2">
+                                or sign up using
+                            </span>
+                    </div>-->
+                </form>
+
+                <div class="login100-more" style="background-image: url('images/bg-01.jpg');">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--===============================================================================================-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animsition/3.2.1/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.9/js/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="js/main.js"></script>
+    <script th:replace="fragments.html :: form-validation"></script>
+</body>
+</html>
+
