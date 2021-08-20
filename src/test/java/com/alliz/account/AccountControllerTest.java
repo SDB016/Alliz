@@ -1,6 +1,8 @@
 package com.alliz.account;
 
+import com.alliz.WithAccount;
 import com.alliz.domain.Account;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -118,6 +123,72 @@ class AccountControllerTest {
 
         assertFalse(account.isEmailVerified());
         assertNull(account.getJoinedAt());
+    }
+
+    @WithAccount("user")
+    @DisplayName("인증 이메일 재전송 화면 보이는지 확인 - 정상")
+    @Test
+    void check_email_correct() throws Exception {
+        mockMvc.perform(get("/check-email"))
+                .andExpect(model().attributeExists("email"))
+                .andExpect(model().attributeDoesNotExist("error"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/check-email"));
+    }
+
+    @DisplayName("인증 이메일 재전송 화면 보이는지 확인 - 비정상")
+    @Test
+    void check_email_error() throws Exception {
+        mockMvc.perform(get("/check-email"))
+                .andExpect(model().attributeExists("error"))
+                .andExpect(model().attributeDoesNotExist("email"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/check-email"));
+    }
+
+    @WithAccount("user")
+    @DisplayName("인증 이메일 재전송 - 비정상 (시간 안 지남)")
+    @Test
+    void resend_check_email_error() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+        String beforeToken = account.getEmailCheckToken();
+        LocalDateTime beforeTokenGeneratedAt = account.getEmailCheckTokenGeneratedAt();
+
+        mockMvc.perform(get("/resend-confirm-email"))
+                .andExpect(model().attributeExists("error"))
+                .andExpect(model().attributeExists("email"))
+                .andExpect(model().attributeDoesNotExist("message"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/check-email"));
+
+        String afterToken = account.getEmailCheckToken();
+        LocalDateTime afterTokenGeneratedAt = account.getEmailCheckTokenGeneratedAt();
+
+        assertEquals(beforeToken, afterToken);
+        assertEquals(beforeTokenGeneratedAt, afterTokenGeneratedAt);
+    }
+
+    @WithAccount("user")
+    @DisplayName("인증 이메일 재전송 - 비정상 (시간 지남)")
+    @Test
+    void resend_check_email_correct() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+        String beforeToken = account.getEmailCheckToken();
+        account.setEmailCheckTokenGeneratedAt(account.getEmailCheckTokenGeneratedAt().minusMinutes(31));
+        LocalDateTime beforeTokenGeneratedAt = account.getEmailCheckTokenGeneratedAt();
+
+        mockMvc.perform(get("/resend-confirm-email"))
+                .andExpect(model().attributeExists("message"))
+                .andExpect(model().attributeExists("email"))
+                .andExpect(model().attributeDoesNotExist("error"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/check-email"));
+
+        String afterToken = account.getEmailCheckToken();
+        LocalDateTime afterTokenGeneratedAt = account.getEmailCheckTokenGeneratedAt();
+
+        assertNotEquals(beforeToken, afterToken);
+        assertNotEquals(beforeTokenGeneratedAt, afterTokenGeneratedAt);
     }
 
     private SignUpForm createSignUpForm() {
