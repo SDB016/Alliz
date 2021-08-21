@@ -13,13 +13,14 @@ public class Child {
     @Id @GeneratedValue
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     private int age;
 
     private String school;
 
-    private String group;
+    private String groupName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")

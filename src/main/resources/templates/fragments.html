@@ -10,14 +10,15 @@
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css"/>
     <th:block th:if="${page=='sign-up' || page=='login'}">
+        <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
         <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animsition/4.0.1/css/animsition.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.9/css/select2.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.css">
-        <link rel="stylesheet" type="text/css" href="css/util.css">
-        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="/css/util.css">
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
     </th:block>
 
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
@@ -26,6 +27,26 @@
     <style>
         .container {
             max-width: 100%;
+        }
+
+        #profile-banner {
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        #profile-banner img {
+            height: auto;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .tagify-outside {
+            border: 0;
+            padding: 0;
+            margin: 0;
         }
     </style>
 </head>
@@ -85,6 +106,28 @@
         </ul>
     </div>
 </nav>
+
+<div th:fragment="profile-banner" th:if="${account.banner != null}" class="row" id="profile-banner">
+    <img th:src="${account.banner}"/>
+</div>
+
+<div th:fragment="profile-menu (profileMenu)" class="row px-3 justify-content-center bg-light">
+    <nav class="col-10 nav nav-tabs">
+        <a class="nav-item nav-link" href="#" th:classappend="${profileMenu == 'info'}? active" th:href="@{'/profile/'}">
+            <i class="fa fa-info-circle"></i> 소개
+        </a>
+        <a class="nav-item nav-link" href="#" th:classappend="${profileMenu == 'members'}? active" th:href="@{'/profile/'}">
+            <i class="fa fa-user"></i> 구성원
+        </a>
+        <a class="nav-item nav-link" th:classappend="${profileMenu == 'events'}? active" href="#" th:href="@{'/profile/'}">
+            <i class="fa fa-calendar"></i> 모임
+        </a>
+        <a sec:authorize="isAuthenticated()" th:if="${isOwner}"
+           class="nav-item nav-link" th:classappend="${profileMenu == 'settings'}? active" href="#" th:href="@{'/profile/'}">
+            <i class="fa fa-cog"></i> 설정
+        </a>
+    </nav>
+</div>
 
 <script type="application/javascript" th:fragment="form-validation">
     (function (){

@@ -1,14 +1,14 @@
 package com.alliz.account;
 
 import com.alliz.domain.Account;
+import com.alliz.domain.Child;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -22,6 +22,7 @@ public class AccountController {
     private final SignUpFormValidator signUpFormValidator;
     private final AccountService accountService;
     private final AccountRepository accountRepository;
+    private final ChildRepository childRepository;
 
     @InitBinder("signUpForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -41,7 +42,12 @@ public class AccountController {
         }
         Account account = accountService.processNewAccount(signUpForm);
         accountService.login(account);
-        return "redirect:/";
+        return "redirect:/sign-up/children";
+    }
+
+    @GetMapping("/sign-up/children")
+    public String signUpChild(Model model) {
+        return "account/sign-up-children";
     }
 
     @GetMapping("/check-email-token")
@@ -86,5 +92,25 @@ public class AccountController {
         model.addAttribute("message", "done.resend");
         model.addAttribute("email", account.getEmail());
         return "account/check-email";
+    }
+
+    @GetMapping("/profile/{nickname}")
+    public String viewProfile(@PathVariable String nickname, Model model, @CurrentAccount Account account) {
+        Account byNickname = accountRepository.findByNickname(nickname);
+        if (byNickname == null) {
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        model.addAttribute("isOwner", byNickname.equals(account));
+        model.addAttribute("account", byNickname);
+        return "account/profile";
+    }
+
+    @PostMapping("/account/child/add")
+    @ResponseBody
+    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody ChildForm childForm) {
+        Child child = childRepository.save(Child.builder().name(childForm.getChildName()).build());
+
+        accountService.addChild(account, child);
+        return ResponseEntity.ok().build();
     }
 }

@@ -2,6 +2,7 @@ package com.alliz.account;
 
 import antlr.Token;
 import com.alliz.domain.Account;
+import com.alliz.domain.Child;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -71,5 +73,13 @@ public class AccountService implements UserDetailsService {
             throw new UsernameNotFoundException(emailOrNickname);
         }
         return new UserAccount(account);
+    }
+
+    public void addChild(Account account, Child child) {
+        Account byNickname = repository.findByNickname(account.getNickname());
+        if (byNickname == null) {
+            throw new IllegalArgumentException(account.getNickname() + "에 해당하는 유저가 없습니다.");
+        }
+        child.setAccount(byNickname); // TODO 좀 더 쿼리 최적화 할 수 없을까?
     }
 }
