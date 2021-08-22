@@ -6,4 +6,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public interface ChildRepository extends JpaRepository<Child, Long> {
+    Child findByName(String name);
 }

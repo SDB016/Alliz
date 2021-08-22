@@ -26,6 +26,7 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository repository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
+    private final ChildRepository childRepository;
 
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
@@ -81,5 +82,14 @@ public class AccountService implements UserDetailsService {
             throw new IllegalArgumentException(account.getNickname() + "에 해당하는 유저가 없습니다.");
         }
         child.setAccount(byNickname); // TODO 좀 더 쿼리 최적화 할 수 없을까?
+    }
+
+    public void removeChild(Account account, Child child) {
+        Account byNickname = repository.findAccountWithChildrenByNickname(account.getNickname()); // TODO child를 같이 가져오는게 더 좋을까??
+        if (byNickname == null) {
+            throw new IllegalArgumentException(account.getNickname() + "에 해당하는 유저가 없습니다.");
+        }
+        byNickname.getChildren().remove(child);
+        childRepository.delete(child);
     }
 }

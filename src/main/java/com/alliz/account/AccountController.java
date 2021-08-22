@@ -23,6 +23,7 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountRepository accountRepository;
     private final ChildRepository childRepository;
+    private final ChildService childService;
 
     @InitBinder("signUpForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -107,10 +108,17 @@ public class AccountController {
 
     @PostMapping("/account/child/add")
     @ResponseBody
-    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody ChildForm childForm) {
-        Child child = childRepository.save(Child.builder().name(childForm.getChildName()).build());
-
+    public ResponseEntity addChild(@CurrentAccount Account account, @RequestBody ChildForm childForm) {
+        Child child = childService.saveChild(childForm);
         accountService.addChild(account, child);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/account/child/remove")
+    @ResponseBody
+    public ResponseEntity removeChild(@CurrentAccount Account account, @RequestBody ChildForm childForm) {
+        Child child = childService.findChild(childForm);
+        accountService.removeChild(account, child);
         return ResponseEntity.ok().build();
     }
 }
