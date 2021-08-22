@@ -19,9 +19,9 @@
         </div>
       </div>
       <div class="col-8">
-        <div class="card-columns" id="all_posting">
+        <div class="card-columns">
           <div th:each="child:${account.getChildren()}">
-            <div class="card" style="width: 17rem; margin-bottom:15px; margin-left: 5px;">
+            <div class="card">
               <svg th:if="${#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
                    th:data-jdenticon-value="${child.name}" width="250" height="250"></svg>
               <img th:if="${!#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
@@ -48,6 +48,16 @@
                 </div>
                 <a href="#" class="btn btn-primary">상세 설정</a>
               </div>
+            </div>
+          </div>
+          <div class="card text-center border-info">
+            <div class="card-header text-info">
+              추가하기
+            </div>
+            <div class="card-body text-info">
+              <h5 class="card-title">학생 추가하기</h5>
+              <p class="card-text">학생을 추가하시려면 아래 버튼을 클릭하세요.</p>
+              <a class="btn btn-primary" th:href="@{/sign-up/children}"> <i class="fa fa-plus fa-2x"></i> </a>
             </div>
           </div>
         </div>

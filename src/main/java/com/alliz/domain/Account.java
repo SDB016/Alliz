@@ -5,9 +5,7 @@ import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
@@ -35,7 +33,7 @@ public class Account {
     private LocalDateTime joinedAt;
 
     @OneToMany(mappedBy = "account")
-    private List<Child> children = new ArrayList<>();
+    private Set<Child> children = new HashSet<>();
 
     private String location;
 

@@ -13,6 +13,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -47,7 +49,10 @@ public class AccountController {
     }
 
     @GetMapping("/sign-up/children")
-    public String signUpChild(Model model) {
+    public String signUpChild(@CurrentAccount Account account, Model model) {
+        model.addAttribute(account);
+        Set<Child> children = accountService.getChild(account);
+        model.addAttribute("children", children.stream().map(Child::getName).collect(Collectors.toList()));
         return "account/sign-up-children";
     }
 

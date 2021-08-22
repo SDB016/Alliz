@@ -16,9 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +38,10 @@ public class AccountService implements UserDetailsService {
                 .email(signUpForm.getEmail())
                 .nickname(signUpForm.getNickname())
                 .password(passwordEncoder.encode(signUpForm.getPassword()))
-                .children(new ArrayList<>())
+                .childBringBackByWeb(true)
+                .childTakingByWeb(true)
+                .children(new HashSet<>())
                 .build();
-
         return repository.save(account);
     }
 
@@ -99,5 +98,10 @@ public class AccountService implements UserDetailsService {
     public void completeSignUp(Account account) {
         account.completeSignUp();
         login(account);
+    }
+
+    public Set<Child> getChild(Account account) {
+        Optional<Account> byId = repository.findById(account.getId());
+        return byId.orElseThrow().getChildren();
     }
 }

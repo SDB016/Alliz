@@ -14,7 +14,7 @@
                     <div class="alert alert-info" role="alert">
                         학생의 이름을 입력 후 엔터를 입력하세요. 학생의 세부 정보는 추후에 <strong>프로필</strong>에서 추가할 수 있습니다.
                     </div>
-                    <input id="children" type="text" name='children' class="tagify-outside" aria-describedby="childrenHelp"/>
+                    <input id="children" type="text" name='children' th:value="${#strings.listJoin(children, ',')}" class="tagify-outside" aria-describedby="childrenHelp"/>
 
                     <div class="flex-sb-m w-full p-t-3 p-b-32">
                         <div class="contact100-form-checkbox">
