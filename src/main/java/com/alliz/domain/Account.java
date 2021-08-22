@@ -39,12 +39,27 @@ public class Account {
 
     private String location;
 
+    private String phone;
+
+    private String kakaoTalkId;
+
     @Lob @Basic(fetch = FetchType.EAGER)
     private String profileImage;
 
+    @Lob @Basic(fetch = FetchType.LAZY)
+    private String banner;
+
     private boolean childTakingByWeb;
 
+    private boolean childTakingByEmail;
+
     private boolean childBringBackByWeb;
+
+    private boolean childBringBackByEmail;
+
+    public String getBanner() {
+        return banner != null ? banner : "/images/default_banner.png";
+    }
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();

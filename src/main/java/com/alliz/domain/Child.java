@@ -22,6 +22,9 @@ public class Child {
 
     private String groupName;
 
+    @Lob @Basic(fetch = FetchType.EAGER)
+    private String profileImage;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;

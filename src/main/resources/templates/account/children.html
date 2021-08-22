@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="fragments.html :: head (page)"></head>
+<body>
+  <div th:replace="fragments.html :: main-nav"></div>
+  <div th:replace="fragments.html :: profile-banner"></div>
+  <div class="container">
+    <div th:replace="fragments.html :: profile-menu (profileMenu='children')"></div>
+    <div class="row mt-5 justify-content-center">
+      <div class="col-2">
+        <div class="card">
+          <svg th:if="${#strings.isEmpty(account.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
+               th:data-jdenticon-value="${account.nickname}" width="250" height="250"></svg>
+          <img th:if="${!#strings.isEmpty(account.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
+               th:src="${account.profileImage}" width="250" height="250"/>
+          <div class="card-body">
+            <strong><p class="card-text text-center txt1" th:text="${account.nickname}">nickname</p></strong>
+          </div>
+        </div>
+      </div>
+      <div class="col-8">
+        <div class="card-columns" id="all_posting">
+          <div th:each="child:${account.getChildren()}">
+            <div class="card" style="width: 17rem; margin-bottom:15px; margin-left: 5px;">
+              <svg th:if="${#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
+                   th:data-jdenticon-value="${child.name}" width="250" height="250"></svg>
+              <img th:if="${!#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
+                   th:src="${child.profileImage}" width="250" height="250"/>
+              <div class="card-body text-center">
+                <h5 class="card-title" th:text="${child.name}"></h5>
+                <div class="card-text">
+                  <p style="font-size: 15px;">
+                    <span th:if="${child.getGroupName()==null && isOwner}">
+                      <i class="fa fa-users" aria-hidden="true"></i> 학생의 반을 설정해주세요.
+                    </span>
+                    <span style="font-size: 15px;" th:if="${child.getGroupName()!=null}">
+                      <i class="fa fa-users" aria-hidden="true"></i> <span th:text="${child.getGroupName()}"></span>
+                    </span>
+                  </p>
+                  <p style="font-size: 15px;">
+                    <span th:if="${child.getSchool()==null && isOwner}">
+                      <i class="fa fa-university" aria-hidden="true"></i> 학생의 학교를 설정해주세요.
+                    </span>
+                    <span style="font-size: 15px;" th:if="${child.getSchool()!=null}">
+                      <i class="fa fa-university" aria-hidden="true"></i> <span th:text="${child.getSchool()}"></span>
+                    </span>
+                  </p>
+                </div>
+                <a href="#" class="btn btn-primary">상세 설정</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+  </div>
+</body>
+</html>

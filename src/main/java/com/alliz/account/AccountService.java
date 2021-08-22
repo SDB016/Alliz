@@ -66,6 +66,7 @@ public class AccountService implements UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
         Account account = repository.findByEmail(emailOrNickname);
         if (account == null) {
@@ -93,5 +94,10 @@ public class AccountService implements UserDetailsService {
         }
         byNickname.getChildren().remove(child);
         childRepository.delete(child);
+    }
+
+    public void completeSignUp(Account account) {
+        account.completeSignUp();
+        login(account);
     }
 }

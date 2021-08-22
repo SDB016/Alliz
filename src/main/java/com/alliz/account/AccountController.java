@@ -64,8 +64,7 @@ public class AccountController {
             model.addAttribute("error", "wrong.token");
             return view;
         }
-        account.completeSignUp();
-        accountService.login(account);
+        accountService.completeSignUp(account);
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
         return view;
@@ -95,17 +94,6 @@ public class AccountController {
         return "account/check-email";
     }
 
-    @GetMapping("/profile/{nickname}")
-    public String viewProfile(@PathVariable String nickname, Model model, @CurrentAccount Account account) {
-        Account byNickname = accountRepository.findByNickname(nickname);
-        if (byNickname == null) {
-            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
-        }
-        model.addAttribute("isOwner", byNickname.equals(account));
-        model.addAttribute("account", byNickname);
-        return "account/profile";
-    }
-
     @PostMapping("/account/child/add")
     @ResponseBody
     public ResponseEntity addChild(@CurrentAccount Account account, @RequestBody ChildForm childForm) {
@@ -120,5 +108,27 @@ public class AccountController {
         Child child = childService.findChild(childForm);
         accountService.removeChild(account, child);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/profile/{nickname}")
+    public String viewProfile(@PathVariable String nickname, Model model, @CurrentAccount Account account) {
+        Account byNickname = accountRepository.findByNickname(nickname);
+        if (byNickname == null) {
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        model.addAttribute("isOwner", byNickname.equals(account));
+        model.addAttribute("account", byNickname);
+        return "account/profile";
+    }
+
+    @GetMapping("/profile/{nickname}/children")
+    public String viewChildren(@PathVariable String nickname, Model model, @CurrentAccount Account account) {
+        Account byNickname = accountRepository.findAccountWithChildrenByNickname(nickname);
+        if (byNickname == null) {
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        model.addAttribute("isOwner", byNickname.equals(account));
+        model.addAttribute("account", byNickname);
+        return "account/children";
     }
 }
