@@ -2,13 +2,17 @@ package com.alliz.account;
 
 import com.alliz.WithAccount;
 import com.alliz.domain.Account;
+import com.alliz.domain.Child;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +40,8 @@ class AccountControllerTest {
     @Autowired private AccountRepository accountRepository;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private AccountService accountService;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private ChildRepository childRepository;
 
     @MockBean JavaMailSender javaMailSender;
 
@@ -75,8 +81,8 @@ class AccountControllerTest {
                         .param("password", password)
                         .param("passwordConfirm", password))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"))
-                .andExpect(view().name("redirect:/"))
+                .andExpect(redirectedUrl("/sign-up/children"))
+                .andExpect(view().name("redirect:/sign-up/children"))
                 .andExpect(authenticated().withUsername("user"));
 
         Account account = accountRepository.findByEmail(email);
@@ -85,6 +91,60 @@ class AccountControllerTest {
         assertNotNull(account.getEmailCheckToken());
         assertTrue(passwordEncoder.matches(password, account.getPassword()));
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
+    }
+
+    @WithAccount("user")
+    @DisplayName("회원가입 - 학생 추가 화면 보이는지 테스트")
+    @Test
+    void signUp_child_view() throws Exception {
+        mockMvc.perform(get("/sign-up/children"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/sign-up-children"));
+    }
+
+    @WithAccount("user")
+    @DisplayName("회원가입 - 학생 추가")
+    @Test
+    void signUp_add_child() throws Exception {
+        ChildForm childForm = new ChildForm();
+        String childName = "testChild";
+        childForm.setChildName(childName);
+
+        mockMvc.perform(post("/account/child/add")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(childForm)))
+                .andExpect(status().isOk());
+
+
+        Child child = childRepository.findByName(childName);
+        assertNotNull(child);
+        Account account = accountRepository.findByNickname("user");
+        assertTrue(account.getChildren().contains(child));
+        assertEquals(1, account.getChildren().size());
+    }
+
+    @WithAccount("user")
+    @DisplayName("회원가입 - 학생 삭제")
+    @Test
+    void signUp_remove_child() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+        Child child = childRepository.save(Child.builder().name("testChild").build());
+        accountService.addChild(account, child);
+
+        assertTrue(account.getChildren().contains(child));
+
+        ChildForm childForm = new ChildForm();
+        childForm.setChildName("testChild");
+
+        mockMvc.perform(post("/account/child/remove")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(childForm)))
+                .andExpect(status().isOk());
+
+        assertFalse(account.getChildren().contains(child));
+        assertEquals(0, account.getChildren().size());
     }
 
     @DisplayName("회원가입 후 토큰 확인 - 정상")
