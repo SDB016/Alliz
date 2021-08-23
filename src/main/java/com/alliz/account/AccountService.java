@@ -114,13 +114,13 @@ public class AccountService implements UserDetailsService {
     }
 
     private void updateProfileOfNotBlank(Account account, Profile profile) {
-        if (profile.getPhone().length() != 0) {
+        if ((profile.getPhone() != null) && (profile.getPhone().length() != 0)) {
             account.setPhone(profile.getPhone());
         }
-        if (profile.getKakaoTalkId().length() != 0) {
+        if ((profile.getKakaoTalkId() != null) && (profile.getKakaoTalkId().length() != 0)) {
             account.setKakaoTalkId(profile.getKakaoTalkId());
         }
-        if (profile.getLocation().length() != 0) {
+        if ((profile.getLocation() != null) && (profile.getLocation().length() != 0)) {
             account.setLocation(profile.getLocation());
         }
     }
