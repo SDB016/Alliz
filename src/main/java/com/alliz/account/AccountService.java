@@ -1,6 +1,5 @@
 package com.alliz.account;
 
-import antlr.Token;
 import com.alliz.domain.Account;
 import com.alliz.domain.Child;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Transactional
 public class AccountService implements UserDetailsService {
-    private final AccountRepository repository;
+    private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final ChildRepository childRepository;
@@ -42,7 +41,7 @@ public class AccountService implements UserDetailsService {
                 .childTakingByWeb(true)
                 .children(new HashSet<>())
                 .build();
-        return repository.save(account);
+        return accountRepository.save(account);
     }
 
     public void sendSignUpConfirmEmail(Account newAccount) {
@@ -67,9 +66,9 @@ public class AccountService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
-        Account account = repository.findByEmail(emailOrNickname);
+        Account account = accountRepository.findByEmail(emailOrNickname);
         if (account == null) {
-            account = repository.findByNickname(emailOrNickname);
+            account = accountRepository.findByNickname(emailOrNickname);
         }
 
         if (account == null) {
@@ -79,7 +78,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void addChild(Account account, Child child) {
-        Account byNickname = repository.findByNickname(account.getNickname());
+        Account byNickname = accountRepository.findByNickname(account.getNickname());
         if (byNickname == null) {
             throw new IllegalArgumentException(account.getNickname() + "에 해당하는 유저가 없습니다.");
         }
@@ -87,7 +86,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void removeChild(Account account, Child child) {
-        Account byNickname = repository.findAccountWithChildrenByNickname(account.getNickname()); // TODO child를 같이 가져오는게 더 좋을까??
+        Account byNickname = accountRepository.findAccountWithChildrenByNickname(account.getNickname()); // TODO child를 같이 가져오는게 더 좋을까??
         if (byNickname == null) {
             throw new IllegalArgumentException(account.getNickname() + "에 해당하는 유저가 없습니다.");
         }
@@ -101,7 +100,28 @@ public class AccountService implements UserDetailsService {
     }
 
     public Set<Child> getChild(Account account) {
-        Optional<Account> byId = repository.findById(account.getId());
+        Optional<Account> byId = accountRepository.findById(account.getId());
         return byId.orElseThrow().getChildren();
+    }
+
+    public void updateProfile(Account account, Profile profile) {
+        Account byNickname = accountRepository.findByNickname(account.getNickname());
+        if (byNickname == null) {
+            throw new IllegalArgumentException(account.getNickname() + "에 해당하는 유저가 없습니다.");
+        }
+        updateProfileOfNotBlank(byNickname, profile);
+        // TODO 프로필 이미지
+    }
+
+    private void updateProfileOfNotBlank(Account account, Profile profile) {
+        if (profile.getPhone().length() != 0) {
+            account.setPhone(profile.getPhone());
+        }
+        if (profile.getKakaoTalkId().length() != 0) {
+            account.setKakaoTalkId(profile.getKakaoTalkId());
+        }
+        if (profile.getLocation().length() != 0) {
+            account.setLocation(profile.getLocation());
+        }
     }
 }

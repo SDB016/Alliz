@@ -10,6 +10,12 @@
             <div th:replace="fragments.html :: settings-menu(currentMenu='profile')"></div>
         </div>
         <div class="col-8">
+            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                <span th:text="${message}">메세지</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div class="row">
                 <h2 class="col-sm-12" th:text="${account.nickname}">username</h2>
             </div>
@@ -23,8 +29,9 @@
                                placeholder="01012345678"
                                aria-describedby="phoneHelp" required>
                         <small id="phoneHelp" class="form-text text-muted">
-                            연락이 가능한 휴대전화 번호를 기입해주세요. 하이픈(-) 없이 입력해주세요.
+                            연락이 가능한 휴대전화 번호를 기입해주세요.
                         </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">phone Error</small>
                     </div>
 
                     <div class="form-group">
@@ -35,16 +42,18 @@
                         <small id="kakaoTalkIdHelp" class="form-text text-muted">
                             추가 연락처를 위해 카카오톡 아이디를 입력해주세요.
                         </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('kakaoTalkId')}" th:errors="*{kakaoTalkId}">kakaoTalkId Error</small>
                     </div>
 
                     <div class="form-group">
                         <label for="location">활동 지역</label>
                         <input id="location" type="text" th:field="*{location}" class="form-control"
                                placeholder="Redmond, WA, USA"
-                               aria-describedby="locationdHelp" required>
-                        <small id="locationdHelp" class="form-text text-muted">
+                               aria-describedby="locationHelp" required>
+                        <small id="locationHelp" class="form-text text-muted">
                             주요 활동(사는 곳이나 직장을 다니는 곳 또는 놀러 다니는 곳) 지역의 도시 이름을 알려주세요.
                         </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('location')}" th:errors="*{location}">location Error</small>
                     </div>
 
                     <div class="form-group">

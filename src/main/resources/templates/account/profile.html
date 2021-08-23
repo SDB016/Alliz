@@ -33,6 +33,18 @@
             <span>의 학부모님</span>
           </span>
         </p>
+        <p th:if="${!#strings.isEmpty(account.phone)}">
+                            <span style="font-size: 20px;">
+                                <i class="fa fa-phone col-1"></i>
+                            </span>
+          <span th:text="${account.phone}" class="col-9"></span>
+        </p>
+        <p th:if="${!#strings.isEmpty(account.kakaoTalkId)}">
+                            <span style="font-size: 20px;">
+                                <i class="fa fa-comment col-1"></i>
+                            </span>
+          <span th:text="${account.kakaoTalkId}" class="col-9"></span>
+        </p>
         <p th:if="${!#strings.isEmpty(account.location)}">
                             <span style="font-size: 20px;">
                                 <i class="fa fa-location-arrow col-1"></i>
