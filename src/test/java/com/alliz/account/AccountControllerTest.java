@@ -251,6 +251,32 @@ class AccountControllerTest {
         assertNotEquals(beforeTokenGeneratedAt, afterTokenGeneratedAt);
     }
 
+    @WithAccount("user")
+    @DisplayName("프로필 뷰")
+    @Test
+    void profile_view() throws Exception{
+        Account account = accountRepository.findByNickname("user");
+
+        mockMvc.perform(get("/profile/" + account.getNickname()))
+                .andExpect(model().attribute("isOwner", true))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/profile"));
+    }
+
+    @WithAccount("user")
+    @DisplayName("관리하는 학생 리스트 뷰")
+    @Test
+    void children_view() throws Exception {
+        Account account = accountRepository.findAccountWithChildrenByNickname("user");
+
+        mockMvc.perform(get("/profile/" + account.getNickname() + "/children"))
+                .andExpect(model().attribute("isOwner", true))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/children"));
+    }
+
     private SignUpForm createSignUpForm() {
         SignUpForm signUpForm = new SignUpForm();
         signUpForm.setNickname("user");
