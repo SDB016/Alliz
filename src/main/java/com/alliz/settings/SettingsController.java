@@ -23,7 +23,7 @@ public class SettingsController {
     @GetMapping("/settings/profile")
     public String profileUpdateForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new Profile());
+        model.addAttribute(new Profile(account));
         return "settings/profile";
     }
 

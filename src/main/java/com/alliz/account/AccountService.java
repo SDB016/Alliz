@@ -105,23 +105,10 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateProfile(Account account, Profile profile) {
-        Account byNickname = accountRepository.findByNickname(account.getNickname());
-        if (byNickname == null) {
-            throw new IllegalArgumentException(account.getNickname() + "에 해당하는 유저가 없습니다.");
-        }
-        updateProfileOfNotBlank(byNickname, profile);
-        // TODO 프로필 이미지
-    }
-
-    private void updateProfileOfNotBlank(Account account, Profile profile) {
-        if ((profile.getPhone() != null) && (profile.getPhone().length() != 0)) {
-            account.setPhone(profile.getPhone());
-        }
-        if ((profile.getKakaoTalkId() != null) && (profile.getKakaoTalkId().length() != 0)) {
-            account.setKakaoTalkId(profile.getKakaoTalkId());
-        }
-        if ((profile.getLocation() != null) && (profile.getLocation().length() != 0)) {
-            account.setLocation(profile.getLocation());
-        }
+        account.setPhone(profile.getPhone());
+        account.setKakaoTalkId(profile.getKakaoTalkId());
+        account.setLocation(profile.getLocation());
+        account.setProfileImage(profile.getProfileImage());
+        accountRepository.save(account);
     }
 }
