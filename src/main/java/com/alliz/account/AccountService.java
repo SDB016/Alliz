@@ -2,6 +2,7 @@ package com.alliz.account;
 
 import com.alliz.domain.Account;
 import com.alliz.domain.Child;
+import com.alliz.settings.PasswordForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -104,11 +105,16 @@ public class AccountService implements UserDetailsService {
         return byId.orElseThrow().getChildren();
     }
 
-    public void updateProfile(Account account, Profile profile) {
-        account.setPhone(profile.getPhone());
-        account.setKakaoTalkId(profile.getKakaoTalkId());
-        account.setLocation(profile.getLocation());
-        account.setProfileImage(profile.getProfileImage());
+    public void updateProfile(Account account, ProfileForm profileForm) {
+        account.setPhone(profileForm.getPhone());
+        account.setKakaoTalkId(profileForm.getKakaoTalkId());
+        account.setLocation(profileForm.getLocation());
+        account.setProfileImage(profileForm.getProfileImage());
+        accountRepository.save(account);
+    }
+
+    public void updatePassword(Account account, PasswordForm passwordForm) {
+        account.setPassword(passwordEncoder.encode(passwordForm.getPassword()));
         accountRepository.save(account);
     }
 }

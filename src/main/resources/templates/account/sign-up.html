@@ -15,7 +15,7 @@
                         <input type="email" class="input100" name="email" id="email" aria-describedby="emailHelp"
                                th:field="*{email}" required>
                         <span class="focus-input100"></span>
-                        <span class="label-input100">Email</span>
+                        <span class="label-input100">이메일</span>
                     </div>
                     <small class="form-text text-danger text-center" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email</small>
                     <br th:if="${#fields.hasErrors('email')}">
@@ -24,7 +24,7 @@
                         <input type="text" class="input100" name="nickname" id="nickname" aria-describedby="nicknameHelp"
                                th:field="*{nickname}" required>
                         <span class="focus-input100"></span>
-                        <span class="label-input100">Nickname</span>
+                        <span class="label-input100">닉네임</span>
                     </div>
                     <small class="form-text text-danger text-center" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname</small>
                     <br th:if="${#fields.hasErrors('nickname')}">
@@ -33,7 +33,7 @@
                         <input type="password" class="input100" name="password" id="password" aria-describedby="passwordHelp"
                                th:field="*{password}" required>
                         <span class="focus-input100"></span>
-                        <span class="label-input100">Password</span>
+                        <span class="label-input100">비밀번호</span>
                     </div>
                     <small class="form-text text-danger text-center" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password</small>
                     <br th:if="${#fields.hasErrors('password')}">
@@ -42,7 +42,7 @@
                         <input type="password" class="input100" name="passwordConfirm" id="passwordConfirm" aria-describedby="passwordConfirmHelp"
                                th:field="*{passwordConfirm}" required>
                         <span class="focus-input100"></span>
-                        <span class="label-input100">PasswordConfirm</span>
+                        <span class="label-input100">비밀번호 확인</span>
                     </div>
                     <small class="form-text text-danger text-center" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">PasswordConfirm</small>
                     <br th:if="${#fields.hasErrors('passwordConfirm')}">

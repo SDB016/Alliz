@@ -3,7 +3,6 @@ package com.alliz.settings;
 import com.alliz.WithAccount;
 import com.alliz.account.AccountRepository;
 import com.alliz.account.AccountService;
-import com.alliz.account.Profile;
 import com.alliz.domain.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,7 @@ class SettingsControllerTest {
 
         mockMvc.perform(get("/settings/profile"))
                 .andExpect(model().attribute("account", account))
-                .andExpect(model().attributeExists("profile"))
+                .andExpect(model().attributeExists("profileForm"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("settings/profile"));
     }
@@ -48,7 +47,6 @@ class SettingsControllerTest {
     void update_profile_success() throws Exception {
         Account account = accountRepository.findByNickname("user");
         String phoneNum = "010-1234-1234";
-        String kakaoId = "myId";
 
         mockMvc.perform(post("/settings/profile")
                         .param("phone", phoneNum)
@@ -58,16 +56,6 @@ class SettingsControllerTest {
                 .andExpect(redirectedUrl("/settings/profile"));
 
         assertEquals(phoneNum, account.getPhone());
-
-        mockMvc.perform(post("/settings/profile")
-                        .param("kakaoTalkId", kakaoId)
-                        .with(csrf()))
-                .andExpect(flash().attributeExists("message"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/settings/profile"));
-
-        assertEquals(phoneNum, account.getPhone());
-        assertEquals(kakaoId, account.getKakaoTalkId());
     }
 
     @WithAccount("user")
