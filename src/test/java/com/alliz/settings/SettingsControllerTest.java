@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
@@ -27,6 +28,7 @@ class SettingsControllerTest {
     @Autowired private MockMvc mockMvc;
     @Autowired private AccountRepository accountRepository;
     @Autowired private AccountService accountService;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @WithAccount("user")
     @DisplayName("프로필 업데이트 뷰 - 프로필")
@@ -74,6 +76,58 @@ class SettingsControllerTest {
                 .andExpect(view().name("settings/profile"));
 
         assertNotEquals(phoneNum, account.getPhone());
+    }
+
+    @WithAccount("user")
+    @DisplayName("프로필 업데이트 뷰 - 비밀번호")
+    @Test
+    void password_update_form() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+
+        mockMvc.perform(get("/settings/password"))
+                .andExpect(model().attribute("account", account))
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings/password"));
+    }
+
+    @WithAccount("user")
+    @DisplayName("프로필 - 비밀번호 업데이트 - 성공")
+    @Test
+    void update_password_success() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+        String oldEncodedPassword = account.getPassword();
+
+        String newRawPassword = "abcd123123";
+        mockMvc.perform(post("/settings/password")
+                        .param("password", newRawPassword)
+                        .param("passwordConfirm", newRawPassword)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/settings/password"));
+
+        assertTrue(passwordEncoder.matches(newRawPassword,account.getPassword()));
+        assertFalse(passwordEncoder.matches(oldEncodedPassword, account.getPassword()));
+    }
+
+    @WithAccount("user")
+    @DisplayName("프로필 - 비밀번호 업데이트 - 실패")
+    @Test
+    void update_password_error() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+        String oldEncodedPassword = account.getPassword();
+
+        String newRawPassword = "abcd123123";
+        String wrongPasswordConfirm = "aaa123123";
+        mockMvc.perform(post("/settings/password")
+                        .param("password", newRawPassword)
+                        .param("passwordConfirm", wrongPasswordConfirm)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings/password"));
+
+        assertFalse(passwordEncoder.matches(newRawPassword,account.getPassword()));
+        assertEquals(oldEncodedPassword, account.getPassword());
     }
 
 }
