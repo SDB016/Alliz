@@ -2,6 +2,7 @@ package com.alliz.account;
 
 import com.alliz.domain.Account;
 import com.alliz.domain.Child;
+import com.alliz.settings.NotificationsForm;
 import com.alliz.settings.PasswordForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -115,6 +116,14 @@ public class AccountService implements UserDetailsService {
 
     public void updatePassword(Account account, PasswordForm passwordForm) {
         account.setPassword(passwordEncoder.encode(passwordForm.getPassword()));
+        accountRepository.save(account);
+    }
+
+    public void updateNotifications(Account account, NotificationsForm notificationsForm) {
+        account.setChildTakingByWeb(notificationsForm.isChildTakingByWeb());
+        account.setChildTakingByEmail(notificationsForm.isChildTakingByEmail());
+        account.setChildBringBackByWeb(notificationsForm.isChildBringBackByWeb());
+        account.setChildBringBackByEmail(notificationsForm.isChildBringBackByEmail());
         accountRepository.save(account);
     }
 }

@@ -123,6 +123,8 @@ class SettingsControllerTest {
                         .param("password", newRawPassword)
                         .param("passwordConfirm", wrongPasswordConfirm)
                         .with(csrf()))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("account"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("settings/password"));
 

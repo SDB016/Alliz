@@ -5,6 +5,7 @@ import com.alliz.account.CurrentAccount;
 import com.alliz.account.ProfileForm;
 import com.alliz.domain.Account;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -57,7 +58,7 @@ public class SettingsController {
 
     @PostMapping("/settings/password")
     public String updatePassword(@CurrentAccount Account account, @Valid PasswordForm passwordForm, Errors errors,
-                                Model model, RedirectAttributes attributes) {
+                                 Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return "settings/password";
@@ -66,5 +67,25 @@ public class SettingsController {
         accountService.updatePassword(account, passwordForm);
         attributes.addFlashAttribute("message", "비밀번호를 수정했습니다.");
         return "redirect:/settings/password";
+    }
+
+    @GetMapping("/settings/notifications")
+    public String updateNotificationsForm(@CurrentAccount Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(new NotificationsForm(account));
+        return "settings/notifications";
+    }
+
+    @PostMapping("/settings/notifications")
+    public String updateNotifications(@CurrentAccount Account account, @Valid NotificationsForm notificationsForm, Errors errors,
+                                      Model model, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return "settings/notifications";
+        }
+
+        accountService.updateNotifications(account, notificationsForm);
+        attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
+        return "redirect:/settings/notifications";
     }
 }
