@@ -132,4 +132,61 @@ class SettingsControllerTest {
         assertEquals(oldEncodedPassword, account.getPassword());
     }
 
+    @WithAccount("user")
+    @DisplayName("프로필 업데이트 뷰 - 알림")
+    @Test
+    void update_notifications_form() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+
+        mockMvc.perform(get("/settings/notifications"))
+                .andExpect(model().attribute("account", account))
+                .andExpect(model().attributeExists("notificationsForm"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings/notifications"));
+    }
+
+    @WithAccount("user")
+    @DisplayName("프로필 - 알림 업데이트 - 성공")
+    @Test
+    void update_notifications_success() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+
+        mockMvc.perform(post("/settings/notifications")
+                        .param("childTakingByWeb", "true")
+                        .param("childTakingByEmail", "false")
+                        .param("childBringBackByWeb", "false")
+                        .param("childBringBackByEmail", "true")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/settings/notifications"));
+
+        assertTrue(account.isChildTakingByWeb());
+        assertFalse(account.isChildTakingByEmail());
+        assertFalse(account.isChildBringBackByWeb());
+        assertTrue(account.isChildBringBackByEmail());
+    }
+
+    @WithAccount("user")
+    @DisplayName("프로필 - 알림 업데이트 - 실패")
+    @Test
+    void update_notifications_error() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+
+        mockMvc.perform(post("/settings/notifications")
+                        .param("childTakingByWeb", "abc")
+                        .param("childTakingByEmail", "abc")
+                        .param("childBringBackByWeb", "abc")
+                        .param("childBringBackByEmail", "abc")
+                        .with(csrf()))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("account"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings/notifications"));
+
+        assertTrue(account.isChildTakingByWeb());
+        assertFalse(account.isChildTakingByEmail());
+        assertTrue(account.isChildBringBackByWeb());
+        assertFalse(account.isChildBringBackByEmail());
+    }
+
 }
