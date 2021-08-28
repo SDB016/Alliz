@@ -1,9 +1,8 @@
 package com.alliz.settings;
 
-import com.alliz.account.AccountService;
-import com.alliz.account.CurrentAccount;
-import com.alliz.account.ProfileForm;
+import com.alliz.account.*;
 import com.alliz.domain.Account;
+import com.alliz.domain.Child;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Controller;
@@ -12,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,6 +23,8 @@ public class SettingsController {
 
     private final AccountService accountService;
     private final PasswordFormValidator passwordFormValidator;
+    private final ChildService childService;
+    private final ChildRepository childRepository;
 
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -87,5 +89,34 @@ public class SettingsController {
         accountService.updateNotifications(account, notificationsForm);
         attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
         return "redirect:/settings/notifications";
+    }
+
+    @GetMapping("/settings/child/{id}")
+    public String childSettingsView(@CurrentAccount Account account, @PathVariable Long id, Model model) throws IllegalAccessException {
+        Child child = childRepository.findById(id).orElseThrow();
+        checkParent(account, child);
+        model.addAttribute(child);
+        model.addAttribute(new ChildForm(child));
+        return "settings/child";
+    }
+
+    @PostMapping("/settings/child/{id}")
+    public String updateChildProfile(@CurrentAccount Account account, @PathVariable Long id, @Valid ChildForm childForm, Errors errors,
+                                     Model model) throws IllegalAccessException {
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return "settings/child/" + id;
+        }
+        Child child = childRepository.findById(id).orElseThrow();
+
+        checkParent(account, child);
+        childService.updateProfile(child, childForm);
+        return "redirect:/profile/" + account.getNickname() + "/children";
+    }
+
+    private void checkParent(Account account, Child child) throws IllegalAccessException {
+        if (!child.getAccount().getId().equals(account.getId())) {
+            throw new IllegalAccessException("보호자가 아니면 접근할 수 없습니다.");
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.alliz.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
@@ -16,11 +17,13 @@ public class Child {
     @Column(nullable = false)
     private String name;
 
-    private int age;
+    private LocalDate birth;
 
-    private String school;
+    private String schoolName;
 
     private String groupName;
+
+    private String phone;
 
     @Lob @Basic(fetch = FetchType.EAGER)
     private String profileImage;

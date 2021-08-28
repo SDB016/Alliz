@@ -4,8 +4,6 @@ import com.alliz.WithAccount;
 import com.alliz.domain.Account;
 import com.alliz.domain.Child;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +106,7 @@ class AccountControllerTest {
     void signUp_add_child() throws Exception {
         ChildForm childForm = new ChildForm();
         String childName = "testChild";
-        childForm.setChildName(childName);
+        childForm.setName(childName);
 
         mockMvc.perform(post("/account/child/add")
                         .with(csrf())
@@ -135,7 +133,7 @@ class AccountControllerTest {
         assertTrue(account.getChildren().contains(child));
 
         ChildForm childForm = new ChildForm();
-        childForm.setChildName("testChild");
+        childForm.setName("testChild");
 
         mockMvc.perform(post("/account/child/remove")
                 .with(csrf())

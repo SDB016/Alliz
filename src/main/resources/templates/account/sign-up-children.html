@@ -44,7 +44,7 @@
     </script>
     <script type="application/javascript">
         $(function () {
-            function tagRequest(url, childName) {
+            function tagRequest(url, name) {
                 $.ajax({
                     dataType: "json",
                     autocomplete: {
@@ -54,7 +54,7 @@
                     contentType: "application/json; charset=utf-8",
                     method: "POST",
                     url: "/account/child" + url,
-                    data: JSON.stringify({'childName': childName})
+                    data: JSON.stringify({'name': name})
                 }).done(function (data, status) {
                     console.log("${data} and status is ${status}");
                 });
