@@ -12,7 +12,7 @@
                     </span>
 
                     <div class="alert alert-info" role="alert">
-                        학생의 이름을 입력 후 엔터를 입력하세요. 학생의 세부 정보는 추후에 <strong>프로필</strong>에서 추가할 수 있습니다.
+                        학생의 이름을 입력 후 엔터를 입력하세요. 학생의 세부 정보는 추후에 <a th:href="@{'/profile/'+ ${account.nickname} + '/children'}"><strong>학생 관리</strong></a>에서 추가할 수 있습니다.
                     </div>
                     <input id="children" type="text" name='children' th:value="${#strings.listJoin(children, ',')}" class="tagify-outside" aria-describedby="childrenHelp"/>
 
