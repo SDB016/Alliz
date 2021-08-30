@@ -266,7 +266,7 @@ class AccountControllerTest {
     @DisplayName("관리하는 학생 리스트 뷰")
     @Test
     void children_view() throws Exception {
-        Account account = accountRepository.findAccountWithChildrenByNickname("user");
+        Account account = accountService.getAccountWithChildren("user");
 
         mockMvc.perform(get("/profile/" + account.getNickname() + "/children"))
                 .andExpect(model().attribute("isOwner", true))

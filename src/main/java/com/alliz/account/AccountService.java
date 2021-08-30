@@ -88,7 +88,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void removeChild(Account account, Child child) {
-        Account byNickname = accountRepository.findAccountWithChildrenByNickname(account.getNickname()); // TODO child를 같이 가져오는게 더 좋을까??
+        Account byNickname = this.getAccountWithChildren(account.getNickname()); // TODO child를 같이 가져오는게 더 좋을까??
         if (byNickname == null) {
             throw new IllegalArgumentException(account.getNickname() + "에 해당하는 유저가 없습니다.");
         }
@@ -125,5 +125,9 @@ public class AccountService implements UserDetailsService {
         account.setChildBringBackByWeb(notificationsForm.isChildBringBackByWeb());
         account.setChildBringBackByEmail(notificationsForm.isChildBringBackByEmail());
         accountRepository.save(account);
+    }
+
+    public Account getAccountWithChildren(String nickname) {
+        return accountRepository.findAccountWithChildrenByNickname(nickname);
     }
 }

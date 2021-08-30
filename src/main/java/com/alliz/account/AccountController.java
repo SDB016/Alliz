@@ -50,8 +50,9 @@ public class AccountController {
 
     @GetMapping("/sign-up/children")
     public String signUpChild(@CurrentAccount Account account, Model model) {
-        model.addAttribute(account);
-        Set<Child> children = accountService.getChild(account);
+        Account accountWithChildren = accountService.getAccountWithChildren(account.getNickname());
+        model.addAttribute(accountWithChildren);
+        Set<Child> children = accountService.getChild(accountWithChildren);
         model.addAttribute("children", children.stream().map(Child::getName).collect(Collectors.toList()));
         return "account/sign-up-children";
     }
@@ -128,7 +129,7 @@ public class AccountController {
 
     @GetMapping("/profile/{nickname}/children")
     public String viewChildren(@PathVariable String nickname, Model model, @CurrentAccount Account account) {
-        Account byNickname = accountRepository.findAccountWithChildrenByNickname(nickname);
+        Account byNickname = accountService.getAccountWithChildren(nickname);
         if (byNickname == null) {
             throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
         }
