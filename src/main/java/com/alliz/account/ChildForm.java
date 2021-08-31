@@ -10,7 +10,6 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 public class ChildForm {
 
     @Length(max = 8)
@@ -29,12 +28,4 @@ public class ChildForm {
     @Length(max = 30)
     private String schoolName;
 
-    public ChildForm(Child child) {
-        this.name = child.getName();
-        this.birth = child.getBirth();
-        this.phone = child.getPhone();
-        this.profileImage = child.getProfileImage();
-        this.groupName = child.getGroupName();
-        this.schoolName = child.getSchoolName();
-    }
 }

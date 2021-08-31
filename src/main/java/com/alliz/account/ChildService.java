@@ -3,6 +3,7 @@ package com.alliz.account;
 import com.alliz.domain.Account;
 import com.alliz.domain.Child;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ChildService {
     private final ChildRepository childRepository;
+    private final ModelMapper modelMapper;
 
     public Child saveChild(ChildForm childForm) {
         return childRepository.save(Child.builder().name(childForm.getName()).build());
@@ -25,12 +27,7 @@ public class ChildService {
     }
 
     public void updateProfile(Child child, ChildForm childForm) {
-        child.setName(childForm.getName());
-        child.setPhone(childForm.getPhone());
-        child.setBirth(childForm.getBirth());
-        child.setSchoolName(childForm.getSchoolName());
-        child.setGroupName(childForm.getGroupName());
-        child.setProfileImage(childForm.getProfileImage());
+        modelMapper.map(childForm, child);
         childRepository.save(child);
     }
 }

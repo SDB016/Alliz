@@ -5,6 +5,7 @@ import com.alliz.domain.Child;
 import com.alliz.settings.NotificationsForm;
 import com.alliz.settings.PasswordForm;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +28,7 @@ public class AccountService implements UserDetailsService {
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final ChildRepository childRepository;
+    private final ModelMapper modelMapper;
 
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
@@ -107,10 +109,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateProfile(Account account, ProfileForm profileForm) {
-        account.setPhone(profileForm.getPhone());
-        account.setKakaoTalkId(profileForm.getKakaoTalkId());
-        account.setLocation(profileForm.getLocation());
-        account.setProfileImage(profileForm.getProfileImage());
+        modelMapper.map(profileForm, account);
         accountRepository.save(account);
     }
 
@@ -120,10 +119,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateNotifications(Account account, NotificationsForm notificationsForm) {
-        account.setChildTakingByWeb(notificationsForm.isChildTakingByWeb());
-        account.setChildTakingByEmail(notificationsForm.isChildTakingByEmail());
-        account.setChildBringBackByWeb(notificationsForm.isChildBringBackByWeb());
-        account.setChildBringBackByEmail(notificationsForm.isChildBringBackByEmail());
+        modelMapper.map(notificationsForm, account);
         accountRepository.save(account);
     }
 

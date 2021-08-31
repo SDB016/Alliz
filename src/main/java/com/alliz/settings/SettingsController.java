@@ -5,6 +5,7 @@ import com.alliz.domain.Account;
 import com.alliz.domain.Child;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Not;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -25,6 +26,7 @@ public class SettingsController {
     private final PasswordFormValidator passwordFormValidator;
     private final ChildService childService;
     private final ChildRepository childRepository;
+    private final ModelMapper modelMapper;
 
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -34,7 +36,7 @@ public class SettingsController {
     @GetMapping("/settings/profile")
     public String updateProfileForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new ProfileForm(account));
+        model.addAttribute(modelMapper.map(account, ProfileForm.class));
         return "settings/profile";
     }
 
@@ -74,7 +76,7 @@ public class SettingsController {
     @GetMapping("/settings/notifications")
     public String updateNotificationsForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new NotificationsForm(account));
+        model.addAttribute(modelMapper.map(account, NotificationsForm.class));
         return "settings/notifications";
     }
 
@@ -96,7 +98,7 @@ public class SettingsController {
         Child child = childRepository.findById(id).orElseThrow();
         checkParent(account, child);
         model.addAttribute(child);
-        model.addAttribute(new ChildForm(child));
+        model.addAttribute(modelMapper.map(child, ChildForm.class));
         return "settings/child";
     }
 
