@@ -22,47 +22,51 @@
         <div class="card-columns">
           <div th:each="child:${account.getChildren()}">
             <div class="card">
-              <svg th:if="${#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
+              <svg th:if="${#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid rounded img-thumbnail"
                    th:data-jdenticon-value="${child.name}" width="250" height="250"></svg>
               <img th:if="${!#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
-                   th:src="${child.profileImage}" width="250" height="250"/>
-              <div class="card-body text-center">
-                <h5 class="card-title" th:text="${child.name}"></h5>
+                   th:src="${child.profileImage}" width="250" height="250">
+              <div class="card-body">
+                <h5 class="card-title text-center" th:text="${child.name}">name</h5>
                 <div class="card-text">
                   <p style="font-size: 15px;">
+                    <i class="fa fa-users" aria-hidden="true"></i>
                     <span th:if="${(child.getGroupName()==null || child.getGroupName().length()==0) && isOwner}">
-                      <i class="fa fa-users" aria-hidden="true"></i> 반을 설정해주세요.
+                      반을 설정해주세요.
                     </span>
                     <span style="font-size: 15px;" th:if="${child.getGroupName()!=null}">
-                      <i class="fa fa-users" aria-hidden="true"></i> <span th:text="${child.getGroupName()}"></span>
+                      <span th:text="${child.getGroupName()}"></span>
                     </span>
                   </p>
                   <p style="font-size: 15px;">
+                    <i class="fa fa-university" aria-hidden="true"></i>
                     <span th:if="${(child.getSchoolName()==null || child.getSchoolName().length()==0) && isOwner}">
-                      <i class="fa fa-university" aria-hidden="true"></i> 학교를 설정해주세요.
+                      학교를 설정해주세요.
                     </span>
                     <span style="font-size: 15px;" th:if="${child.getSchoolName()!=null}">
-                      <i class="fa fa-university" aria-hidden="true"></i> <span th:text="${child.getSchoolName()}"></span>
+                      <span th:text="${child.getSchoolName()}"></span>
                     </span>
                   </p>
                   <p style="font-size: 15px;">
+                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
                     <span th:if="${child.getBirth()==null && isOwner}">
-                      <i class="fa fa-birthday-cake" aria-hidden="true"></i> 생년월일을 설정해주세요.
+                      생년월일을 설정해주세요.
                     </span>
                     <span style="font-size: 15px;" th:if="${child.getBirth()!=null}">
-                      <i class="fa fa-users" aria-hidden="true"></i> <span th:text="${child.getBirth()}"></span>
+                      <span th:text="${child.getBirth()}"></span>
                     </span>
                   </p>
                   <p style="font-size: 15px;">
+                    <i class="fa fa-phone" aria-hidden="true"></i>
                     <span th:if="${(child.getPhone()==null || child.getPhone().length() == 0) && isOwner}">
-                      <i class="fa fa-phone" aria-hidden="true"></i> 전화번호를 설정해주세요.
+                      전화번호를 설정해주세요.
                     </span>
                     <span style="font-size: 15px;" th:if="${child.getPhone()!=null}">
-                      <i class="fa fa-users" aria-hidden="true"></i> <span th:text="${child.getPhone()}"></span>
+                      <span th:text="${child.getPhone()}"></span>
                     </span>
                   </p>
                 </div>
-                <a th:if="${isOwner}" th:href="@{'/settings/child/' + ${child.id}}" class="btn btn-primary">상세 설정</a>
+                <a th:if="${isOwner}" th:href="@{'/settings/child/' + ${child.id}}" class="btn btn-primary d-flex justify-content-center">상세 설정</a>
               </div>
             </div>
           </div>
