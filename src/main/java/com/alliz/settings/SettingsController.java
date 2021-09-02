@@ -106,8 +106,9 @@ public class SettingsController {
     public String updateChildProfile(@CurrentAccount Account account, @PathVariable Long id, @Valid ChildForm childForm, Errors errors,
                                      Model model) throws IllegalAccessException {
         if (errors.hasErrors()) {
-            model.addAttribute(account);
-            return "settings/child/" + id;
+            Child child = childRepository.findById(id).orElseThrow();
+            model.addAttribute(child);
+            return "settings/child";
         }
         Child child = childRepository.findById(id).orElseThrow();
 
