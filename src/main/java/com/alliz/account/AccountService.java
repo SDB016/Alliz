@@ -124,6 +124,31 @@ public class AccountService implements UserDetailsService {
     }
 
     public Account getAccountWithChildren(String nickname) {
-        return accountRepository.findAccountWithChildrenByNickname(nickname);
+        Account byNickname = accountRepository.findAccountWithChildrenByNickname(nickname);
+        if (byNickname == null) {
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        return byNickname;
+    }
+
+    public void updateBanner(Account account, String banner) {
+        Account byNickname = accountRepository.findByNickname(account.getNickname());
+        byNickname.setBanner(banner);
+    }
+
+    public void enableBanner(Account account) {
+        account.setUseBanner(true);
+    }
+
+    public void disableBanner(Account account) {
+        account.setUseBanner(false);
+    }
+
+    public Account getAccountByNickname(String nickname) {
+        Account byNickname = accountRepository.findByNickname(nickname);
+        if (byNickname == null) {
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        return byNickname;
     }
 }

@@ -44,8 +44,10 @@ public class Account {
     @Lob @Basic(fetch = FetchType.EAGER)
     private String profileImage;
 
-    @Lob @Basic(fetch = FetchType.LAZY)
+    @Lob @Basic(fetch = FetchType.EAGER)
     private String banner;
+
+    private boolean useBanner;
 
     private boolean childTakingByWeb;
 

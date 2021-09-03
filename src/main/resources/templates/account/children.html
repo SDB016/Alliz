@@ -22,7 +22,7 @@
         <div class="card-columns">
           <div th:each="child:${account.getChildren()}">
             <div class="card">
-              <svg th:if="${#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid rounded img-thumbnail"
+              <svg th:if="${#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
                    th:data-jdenticon-value="${child.name}" width="250" height="250"></svg>
               <img th:if="${!#strings.isEmpty(child.profileImage)}" class="card-img-top img-fluid float-left rounded img-thumbnail"
                    th:src="${child.profileImage}" width="250" height="250">
@@ -31,19 +31,19 @@
                 <div class="card-text">
                   <p style="font-size: 15px;">
                     <i class="fa fa-users" aria-hidden="true"></i>
-                    <span th:if="${(child.getGroupName()==null || child.getGroupName().length()==0) && isOwner}">
+                    <span th:if="${#strings.isEmpty(child.groupName) && isOwner}">
                       반을 설정해주세요.
                     </span>
-                    <span style="font-size: 15px;" th:if="${child.getGroupName()!=null}">
+                    <span style="font-size: 15px;" th:if="${!#strings.isEmpty(child.groupName)}">
                       <span th:text="${child.getGroupName()}"></span>
                     </span>
                   </p>
                   <p style="font-size: 15px;">
                     <i class="fa fa-university" aria-hidden="true"></i>
-                    <span th:if="${(child.getSchoolName()==null || child.getSchoolName().length()==0) && isOwner}">
+                    <span th:if="${#strings.isEmpty(child.getSchoolName())&& isOwner}">
                       학교를 설정해주세요.
                     </span>
-                    <span style="font-size: 15px;" th:if="${child.getSchoolName()!=null}">
+                    <span style="font-size: 15px;" th:if="${!#strings.isEmpty(child.getSchoolName())}">
                       <span th:text="${child.getSchoolName()}"></span>
                     </span>
                   </p>
@@ -58,10 +58,10 @@
                   </p>
                   <p style="font-size: 15px;">
                     <i class="fa fa-phone" aria-hidden="true"></i>
-                    <span th:if="${(child.getPhone()==null || child.getPhone().length() == 0) && isOwner}">
+                    <span th:if="${#strings.isEmpty(child.phone) && isOwner}">
                       전화번호를 설정해주세요.
                     </span>
-                    <span style="font-size: 15px;" th:if="${child.getPhone()!=null}">
+                    <span style="font-size: 15px;" th:if="${!#strings.isEmpty(child.phone)}">
                       <span th:text="${child.getPhone()}"></span>
                     </span>
                   </p>

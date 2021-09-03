@@ -34,76 +34,109 @@ public class SettingsController {
     }
 
     @GetMapping("/settings/profile")
-    public String updateProfileForm(@CurrentAccount Account account, Model model) {
+    public String updateProfileForm(@CurrentAccount Account currentAccount, Model model) {
+        Account account = accountService.getAccountByNickname(currentAccount.getNickname());
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, ProfileForm.class));
         return "settings/profile";
     }
 
     @PostMapping("/settings/profile")
-    public String updateProfile(@CurrentAccount Account account, @Valid ProfileForm profileForm, Errors errors,
+    public String updateProfile(@CurrentAccount Account currentAccount, @Valid ProfileForm profileForm, Errors errors,
                                 Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
-            model.addAttribute(account);
+            model.addAttribute(currentAccount);
             return "settings/profile";
         }
 
-        accountService.updateProfile(account, profileForm);
+        accountService.updateProfile(currentAccount, profileForm);
         attributes.addFlashAttribute("message", "프로필을 수정했습니다.");
         return "redirect:/settings/profile";
     }
 
     @GetMapping("/settings/password")
-    public String updatePasswordForm(@CurrentAccount Account account, Model model) {
+    public String updatePasswordForm(@CurrentAccount Account currentAccount, Model model) {
+        Account account = accountService.getAccountByNickname(currentAccount.getNickname());
         model.addAttribute(account);
         model.addAttribute(new PasswordForm());
         return "settings/password";
     }
 
     @PostMapping("/settings/password")
-    public String updatePassword(@CurrentAccount Account account, @Valid PasswordForm passwordForm, Errors errors,
+    public String updatePassword(@CurrentAccount Account currentAccount, @Valid PasswordForm passwordForm, Errors errors,
                                  Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
-            model.addAttribute(account);
+            model.addAttribute(currentAccount);
             return "settings/password";
         }
 
-        accountService.updatePassword(account, passwordForm);
+        accountService.updatePassword(currentAccount, passwordForm);
         attributes.addFlashAttribute("message", "비밀번호를 수정했습니다.");
         return "redirect:/settings/password";
     }
 
     @GetMapping("/settings/notifications")
-    public String updateNotificationsForm(@CurrentAccount Account account, Model model) {
+    public String updateNotificationsForm(@CurrentAccount Account currentAccount, Model model) {
+        Account account = accountService.getAccountByNickname(currentAccount.getNickname());
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, NotificationsForm.class));
         return "settings/notifications";
     }
 
     @PostMapping("/settings/notifications")
-    public String updateNotifications(@CurrentAccount Account account, @Valid NotificationsForm notificationsForm, Errors errors,
+    public String updateNotifications(@CurrentAccount Account currentAccount, @Valid NotificationsForm notificationsForm, Errors errors,
                                       Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
-            model.addAttribute(account);
+            model.addAttribute(currentAccount);
             return "settings/notifications";
         }
 
-        accountService.updateNotifications(account, notificationsForm);
+        accountService.updateNotifications(currentAccount, notificationsForm);
         attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
         return "redirect:/settings/notifications";
     }
 
+    @GetMapping("/settings/banner")
+    public String updateBannerForm(@CurrentAccount Account currentAccount, Model model) {
+        Account account = accountService.getAccountByNickname(currentAccount.getNickname());
+        model.addAttribute(account);
+        return "settings/banner";
+    }
+
+    @PostMapping("/settings/banner")
+    public String updateBanner(@CurrentAccount Account currentAccount, String banner, RedirectAttributes attributes) {
+        accountService.updateBanner(currentAccount, banner);
+        attributes.addFlashAttribute("message", "배너 이미지를 변경했습니다.");
+        return "redirect:/settings/banner";
+    }
+
+    @PostMapping("/settings/banner/enable")
+    public String enableBanner(@CurrentAccount Account currentAccount) {
+        Account account = accountService.getAccountByNickname(currentAccount.getNickname());
+        accountService.enableBanner(account);
+        return "redirect:/settings/banner";
+    }
+
+    @PostMapping("/settings/banner/disable")
+    public String disableBanner(@CurrentAccount Account currentAccount) {
+        Account account = accountService.getAccountByNickname(currentAccount.getNickname());
+        accountService.disableBanner(account);
+        return "redirect:/settings/banner";
+    }
+
     @GetMapping("/settings/child/{id}")
-    public String childSettingsView(@CurrentAccount Account account, @PathVariable Long id, Model model) throws IllegalAccessException {
+    public String childSettingsView(@CurrentAccount Account currentAccount, @PathVariable Long id, Model model) throws IllegalAccessException {
+        Account account = accountService.getAccountByNickname(currentAccount.getNickname());
         Child child = childRepository.findById(id).orElseThrow();
         checkParent(account, child);
+        model.addAttribute(account);
         model.addAttribute(child);
         model.addAttribute(modelMapper.map(child, ChildForm.class));
         return "settings/child";
     }
 
     @PostMapping("/settings/child/{id}")
-    public String updateChildProfile(@CurrentAccount Account account, @PathVariable Long id, @Valid ChildForm childForm, Errors errors,
+    public String updateChildProfile(@CurrentAccount Account currentAccount, @PathVariable Long id, @Valid ChildForm childForm, Errors errors,
                                      Model model) throws IllegalAccessException {
         if (errors.hasErrors()) {
             Child child = childRepository.findById(id).orElseThrow();
@@ -112,13 +145,13 @@ public class SettingsController {
         }
         Child child = childRepository.findById(id).orElseThrow();
 
-        checkParent(account, child);
+        checkParent(currentAccount, child);
         childService.updateProfile(child, childForm);
-        return "redirect:/profile/" + account.getNickname() + "/children";
+        return "redirect:/profile/" + currentAccount.getNickname() + "/children";
     }
 
-    private void checkParent(Account account, Child child) throws IllegalAccessException {
-        if (!child.getAccount().getId().equals(account.getId())) {
+    private void checkParent(Account currentAccount, Child child) throws IllegalAccessException {
+        if (!child.getAccount().getId().equals(currentAccount.getId())) {
             throw new IllegalAccessException("보호자가 아니면 접근할 수 없습니다.");
         }
     }
