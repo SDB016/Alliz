@@ -72,7 +72,7 @@ public class AccountController {
         }
         accountService.completeSignUp(account);
         model.addAttribute("numberOfUser", accountRepository.count());
-        model.addAttribute("nickname", account.getNickname());
+        model.addAttribute("account", account);
         return view;
     }
 
@@ -83,6 +83,7 @@ public class AccountController {
             return "account/check-email";
         }
         model.addAttribute("email", account.getEmail());
+        model.addAttribute("account", account);
         return "account/check-email";
     }
 
@@ -92,11 +93,13 @@ public class AccountController {
             model.addAttribute("error",
                     "인증 이메일은 30분에 한번만 보낼 수 있습니다. 잠시후 다시 시도해주세요.");
             model.addAttribute("email", account.getEmail());
+            model.addAttribute("account", account);
             return "account/check-email";
         }
         accountService.sendSignUpConfirmEmail(account);
         model.addAttribute("message", "done.resend");
         model.addAttribute("email", account.getEmail());
+        model.addAttribute("account", account);
         return "account/check-email";
     }
 

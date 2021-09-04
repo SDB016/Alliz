@@ -158,7 +158,7 @@ class AccountControllerTest {
                 .andExpect(view().name("account/checked-email"))
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(model().attributeExists("numberOfUser"))
-                .andExpect(model().attributeExists("nickname"))
+                .andExpect(model().attributeExists("account"))
                 .andExpect(authenticated().withUsername("user"));
 
         assertTrue(account.isEmailVerified());
