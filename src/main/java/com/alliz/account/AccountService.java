@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,6 +42,7 @@ public class AccountService implements UserDetailsService {
                 .email(signUpForm.getEmail())
                 .nickname(signUpForm.getNickname())
                 .password(passwordEncoder.encode(signUpForm.getPassword()))
+                .role(signUpForm.getRole())
                 .childBringBackByWeb(true)
                 .childTakingByWeb(true)
                 .children(new HashSet<>())
@@ -60,10 +62,13 @@ public class AccountService implements UserDetailsService {
     }
 
     public void login(Account account) {
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(account.getRole().name()));
+
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                new UserAccount(account), // principle
+                new UserAccount(account, roles), // principle
                 account.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                roles);
         SecurityContextHolder.getContext().setAuthentication(token);
     }
 
@@ -78,7 +83,11 @@ public class AccountService implements UserDetailsService {
         if (account == null) {
             throw new UsernameNotFoundException(emailOrNickname);
         }
-        return new UserAccount(account);
+
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(account.getRole().name()));
+
+        return new UserAccount(account, roles);
     }
 
     public void addChild(Account account, Child child) {

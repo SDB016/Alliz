@@ -3,6 +3,7 @@ package com.alliz;
 import com.alliz.account.AccountService;
 import com.alliz.account.SignUpForm;
 import com.alliz.account.UserAccount;
+import com.alliz.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         signUpForm.setEmail(nickname + "@email.com");
         signUpForm.setPassword("aa123123");
         signUpForm.setPasswordConfirm("aa123123");
+        signUpForm.setRole(Role.ROLE_USER);
         accountService.processNewAccount(signUpForm);
 
         UserDetails principle = accountService.loadUserByUsername(nickname);

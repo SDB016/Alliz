@@ -3,6 +3,7 @@ package com.alliz;
 import com.alliz.account.AccountRepository;
 import com.alliz.account.AccountService;
 import com.alliz.account.SignUpForm;
+import com.alliz.domain.Role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,6 +37,7 @@ class MainControllerTest {
         signUpForm.setNickname("user");
         signUpForm.setPassword("aaa123123");
         signUpForm.setPasswordConfirm("aaa123123");
+        signUpForm.setRole(Role.ROLE_USER);
         accountService.processNewAccount(signUpForm);
     }
 

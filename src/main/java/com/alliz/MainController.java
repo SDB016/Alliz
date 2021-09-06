@@ -18,6 +18,13 @@ public class MainController {
         return "index";
     }
 
+
+    @GetMapping("/admin")
+    public String viewAdminHome(@CurrentAccount Account account, Model model) {
+        model.addAttribute(account);
+        return "admin";
+    }
+
     @GetMapping("/login")
     public String login() {
         return "login";

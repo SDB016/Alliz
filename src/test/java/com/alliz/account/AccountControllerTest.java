@@ -3,6 +3,7 @@ package com.alliz.account;
 import com.alliz.WithAccount;
 import com.alliz.domain.Account;
 import com.alliz.domain.Child;
+import com.alliz.domain.Role;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,7 +78,8 @@ class AccountControllerTest {
                         .param("nickname", "user")
                         .param("email", email)
                         .param("password", password)
-                        .param("passwordConfirm", password))
+                        .param("passwordConfirm", password)
+                        .param("role",Role.ROLE_USER.name()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/sign-up/children"))
                 .andExpect(view().name("redirect:/sign-up/children"))
@@ -281,6 +283,7 @@ class AccountControllerTest {
         signUpForm.setEmail("user@email.com");
         signUpForm.setPassword("abc1234567");
         signUpForm.setPasswordConfirm("abc1234567");
+        signUpForm.setRole(Role.ROLE_USER);
         return signUpForm;
     }
 }

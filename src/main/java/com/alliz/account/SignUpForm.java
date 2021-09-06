@@ -1,5 +1,6 @@
 package com.alliz.account;
 
+import com.alliz.domain.Role;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -24,5 +25,7 @@ public class SignUpForm {
 
     @NotBlank
     private String passwordConfirm;
+
+    private Role role;
 }
 

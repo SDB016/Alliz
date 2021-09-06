@@ -47,6 +47,17 @@
                     <small class="form-text text-danger text-center" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">PasswordConfirm</small>
                     <br th:if="${#fields.hasErrors('passwordConfirm')}">
 
+                    <div class="form-group">
+                        <label class="col-form-label">권한</label>
+                        <select class="form-control" th:field="*{role}">
+                            <option th:each="role : ${T(com.alliz.domain.Role).values()}"
+                                    th:value="${role.name()}"
+                                    th:text="${role.name()}">
+                                val
+                            </option>
+                        </select>
+                    </div>
+
                     <div class="flex-sb-m w-full p-t-3 p-b-32">
                         <div class="contact100-form-checkbox">
                         </div>
