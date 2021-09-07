@@ -3,7 +3,10 @@ package com.alliz.settings;
 import com.alliz.WithAccount;
 import com.alliz.account.AccountRepository;
 import com.alliz.account.AccountService;
+import com.alliz.account.ChildRepository;
 import com.alliz.domain.Account;
+import com.alliz.domain.Child;
+import com.alliz.domain.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +14,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
 import javax.transaction.Transactional;
+
+import java.time.LocalDate;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -29,6 +36,7 @@ class SettingsControllerTest {
     @Autowired private AccountRepository accountRepository;
     @Autowired private AccountService accountService;
     @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private ChildRepository childRepository;
 
     @WithAccount("user")
     @DisplayName("프로필 업데이트 뷰 - 프로필")
@@ -189,4 +197,98 @@ class SettingsControllerTest {
         assertFalse(account.isChildBringBackByEmail());
     }
 
+    @WithAccount("user")
+    @DisplayName("학생 세부 정보 조회 - 보호자")
+    @Test
+    void get_child_settings_view_parent() throws Exception {
+        Account account = accountService.getAccountByNickname("user");
+        Child child = makeChildWithParent(account);
+
+        mockMvc.perform(get("/settings/child/" + child.getId()))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("child"))
+                .andExpect(model().attributeExists("childForm"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings/child"));
+    }
+
+    @WithAccount("user")
+    @DisplayName("학생 세부 정보 조회 - 제 3자")
+    @Test
+    void get_child_settings_view_stranger() throws Exception {
+        Account stranger = makeStranger();
+        accountRepository.save(stranger);
+        Child child = makeChildWithParent(stranger);
+
+        assertThrows(NestedServletException.class, () ->
+                mockMvc.perform(get("/settings/child/" + child.getId())));
+    }
+
+    @WithAccount("user")
+    @DisplayName("학생 정보 수정 - 보호자")
+    @Test
+    void update_child_profile_parent() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+        Child child = makeChildWithParent(account);
+
+        String newName = "newName";
+        String newBirth = "2000-01-01";
+        String newPhone = "010-1234-1234";
+        mockMvc.perform(post("/settings/child/" + child.getId())
+                .param("name", newName)
+                .param("birth", newBirth)
+                .param("phone", newPhone)
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/profile/"+account.getNickname()+"/children"));
+
+        assertEquals(child.getName(), newName);
+        assertEquals(child.getBirth().toString(), newBirth);
+        assertEquals(child.getPhone(), newPhone);
+    }
+
+    @WithAccount("user")
+    @DisplayName("학생 정보 수정 - 제 3자")
+    @Test
+    void update_child_profile_stranger() throws Exception {
+        Account stranger = makeStranger();
+        accountRepository.save(stranger);
+        Child child = makeChildWithParent(stranger);
+
+        assertThrows(NestedServletException.class, () ->
+                mockMvc.perform(post("/settings/child/" + child.getId())
+                        .param("name", "newName")
+                        .param("birth", "2000-01-01")
+                        .param("groupName", "newGroup")
+                        .with(csrf())));
+    }
+
+    @WithAccount("user")
+    @DisplayName("학생 정보 수정 - 에러")
+    @Test
+    void update_child_profile_error() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+        Child child = makeChildWithParent(account);
+
+        mockMvc.perform(post("/settings/child/" + child.getId())
+                        .param("name", "newName")
+                        .param("phone", "123-3456-7890")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("child"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(view().name("settings/child"));
+    }
+
+    private Child makeChildWithParent(Account parent) {
+        Child child = Child.builder().name("AChild").build();
+        child.setAccount(parent);
+        childRepository.save(child);
+        return child;
+    }
+
+    private Account makeStranger() {
+        return Account.builder().nickname("stranger").email("email@email.com")
+                .password("abc123123").role(Role.ROLE_USER).children(new HashSet<>()).build();
+    }
 }
