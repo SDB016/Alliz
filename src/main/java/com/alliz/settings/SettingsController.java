@@ -141,6 +141,7 @@ public class SettingsController {
         if (errors.hasErrors()) {
             Child child = childRepository.findById(id).orElseThrow();
             model.addAttribute(child);
+            model.addAttribute(currentAccount);
             return "settings/child";
         }
         Child child = childRepository.findById(id).orElseThrow();

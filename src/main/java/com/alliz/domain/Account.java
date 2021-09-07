@@ -27,6 +27,9 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "account")
+    private List<Reservation> reservations = new ArrayList<>();
+
     private boolean emailVerified;
 
     private String emailCheckToken;
@@ -35,7 +38,7 @@ public class Account {
 
     private LocalDateTime joinedAt;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private Set<Child> children = new HashSet<>();
 
     private String location;
