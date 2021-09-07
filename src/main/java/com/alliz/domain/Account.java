@@ -1,7 +1,7 @@
 package com.alliz.domain;
 
+import com.alliz.reservation.Enrollment;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ public class Account {
     private Role role;
 
     @OneToMany(mappedBy = "account")
-    private List<Reservation> reservations = new ArrayList<>();
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     private boolean emailVerified;
 

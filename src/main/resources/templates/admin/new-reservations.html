@@ -4,15 +4,20 @@
 <head th:replace="fragments.html :: head(page)"></head>
 <body class="bg-light">
     <div th:replace="fragments.html :: main-nav"></div>
-    <div th:replace="fragments.html :: profile-banner"></div>
     <div class="container">
         <div class="row mt-5 justify-content-center">
             <div class="col-2">
-                <div th:replace="fragments.html :: settings-menu(currentMenu='profile')"></div>
+                <div th:replace="fragments.html :: reservation-menu (currentMenu='reservation')"></div>
             </div>
             <div class="col-8">
                 <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
                     <span th:text="${message}">메세지</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <span th:text="${error}">메세지</span>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -22,11 +27,11 @@
                 </div>
                 <div class="row mt-3">
                     <form class="col-sm-10" action="#"
-                          th:action="@{/admin/reservations/add}" th:object="${newReservationForm}" method="post" novalidate>
+                          th:action="@{/admin/reservations/add}" th:object="${reservationForm}" method="post" novalidate>
 
                         <div class="form-group">
                             <label for="location">장소</label>
-                            <input id='location' type='text' name='location' class="form-control" aria-describedby="locationHelp" th:field="*{location}" required>
+                            <input id='location' type='text' name='location' class="form-control" aria-describedby="locationHelp" th:field="*{reservationLocation}" required>
                             <small id="locationHelp" class="form-text text-muted">
                                 차량이 도착할 장소를 등록하세요.
                             </small>
@@ -34,7 +39,7 @@
 
                         <div class="form-group">
                             <label for="time">시간</label>
-                            <input id='time' type='text' name='time' class="form-control" aria-describedby="timeHelp" th:field="*{time}" required>
+                            <input id='time' type='text' name='time' class="form-control" aria-describedby="timeHelp" th:field="*{reservationTime}" required>
                             <small id="timeHelp" class="form-text text-muted">
                                 차량이 도착할 시간을 등록하세요.
                             </small>

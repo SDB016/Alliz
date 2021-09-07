@@ -1,4 +1,4 @@
-package com.alliz.domain;
+package com.alliz.reservation;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,14 +12,16 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Time {
+@NoArgsConstructor
+public class Reservation {
 
     @Id @GeneratedValue
     private Long id;
 
-    private LocalDateTime reservationTime;
+    private String reservationTime;
 
-    @OneToMany(mappedBy = "time")
-    private List<ReservationDate> reservationDates = new ArrayList<>();
+    private String reservationLocation;
+
+    @OneToMany(mappedBy = "reservation")
+    private List<EnrollmentReservation> enrollmentReservations = new ArrayList<>();
 }

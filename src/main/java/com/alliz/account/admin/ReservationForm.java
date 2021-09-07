@@ -6,10 +6,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 @Data
-public class newReservationForm {
+public class ReservationForm {
 
-    @DateTimeFormat(pattern = "HH:mm:ss")
-    private LocalDateTime time;
+    private String reservationTime;
 
-    private String location;
+    private String reservationLocation;
 }
