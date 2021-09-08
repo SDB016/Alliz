@@ -77,7 +77,7 @@
                 <a class="nav-link" th:href="@{/sign-up}">가입</a>
             </li>
             <li class="nav-item" th:if="${account.role == T(com.alliz.domain.Role).ROLE_ADMIN}" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{/admin/create-reservations}"><i class="fa fa-bus"></i></a>
+                <a class="nav-link" th:href="@{/admin/new-reservations}"><i class="fa fa-bus"></i></a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a class="nav-link" th:href="@{/notifications}">
@@ -190,8 +190,8 @@
 </div>
 
 <div th:fragment="reservation-menu (currentMenu)" class="list-group">
-    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'reservation'}? active" href="#" th:href="@{/admin/create-reservations}">배차 등록</a>
-    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'}? active" href="#" th:href="@{/settings/password}">배차 조회</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'create-reservation'}? active" href="#" th:href="@{/admin/new-reservations}">배차 등록</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'reservations'}? active" href="#" th:href="@{/admin/reservations}">배차 조회</a>
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'notifications'}? active" href="#" th:href="@{/settings/notifications}">알림</a>
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'banner'}? active" href="#" th:href="@{/settings/banner}">배너 화면</a>
     <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMenu == 'account'}? active" href="#" th:href="@{/settings/account}">계정</a>
