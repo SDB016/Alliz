@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head(page)"></head>
+<body class="bg-light">
+    <div th:replace="fragments.html :: main-nav"></div>
+    <div class="container">
+        <div class="row mt-5 justify-content-center">
+            <div class="col-2">
+                <div th:replace="fragments.html :: reservation-menu (currentMenu='reservations')"></div>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <h2 class="col-sm-12">배차 시간</h2>
+                </div>
+                <div class="row mt-3">
+                    <div class="card-columns">
+                        <div th:each="reservation : ${reservationList}">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h4 th:text="${reservation.reservationTime}" style="display: inline"></h4>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text text-center" th:text="${reservation.reservationLocation}"></p>
+                                    <a class="btn" th:href="@{/}">
+                                        <i class="fa fa-users fa-2x"></i>
+                                    </a>
+                                    <a class="btn" th:href="@{'/admin/reservation/edit/' + ${reservation.id}}">
+                                        <i class="fa fa-edit fa-2x"></i>
+                                    </a>
+                                    <a class="btn" th:href="@{'/admin/reservation/remove/' + ${reservation.id}}">
+                                        <i class="fa fa-trash fa-2x"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments.html :: footer"></div>
+    </div>
+    <script th:replace="fragments.html :: tooltip"></script>
+</body>
+</html>
