@@ -8,10 +8,78 @@
     </div>
     <div class="container">
         <div class="py-5 text-center">
-            <h2>알리지</h2>
-        </div>
-
+            <h3>알리지</h3>
+            <div th:if="${account.getChildren() != null}">
+                <select class="custom-select col-2" onchange="selectChild(this);" id="child">
+                    <div th:each="child : ${account.getChildren()}">
+                        <option class="text-center" th:value="${child.id}" th:text="${child.name}"></option>
+                    </div>
+                </select>
+                <br/><br/>
+                <div class="row mt-7 justify-content-center">
+                    <div class="card-columns col-10">
+                            <div th:each="reservation : ${reservationList}">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <h4 th:text="${reservation.reservationTime}"></h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text text-center" th:text="${reservation.reservationLocation}"></p>
+                                        <button type="button" class="btn btn-primary btn-block" th:onclick="enroll(${reservation.id})">
+                                            <i class="fa fa-calendar"></i>  예약하기
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <footer th:replace="fragments.html::footer"></footer>
     </div>
+    <script type="application/javascript">
+        // TODO 예약하기 버튼 클릭 시 데이터 전송
+
+        /*let childVal;
+        function selectChild(s) {
+            childVal = s.value;
+            alert(childVal);
+        }
+
+        function enroll(id) {
+            const form = document.createElement('form');
+            form.setAttribute('method', 'post');
+            form.setAttribute('action', '/enroll/' + childVal + '/' + id);
+            document.charset = "utf-8";
+            form.style.display = 'hidden';
+            document.body.appendChild(form);
+            form.submit();
+        }*/
+
+       /* var paramData = {
+            itemId : $("#itemId").val(),
+            count : $("#count").val()
+        };
+
+        var param = JSON.stringify(paramData);
+
+        $.ajax({
+            url      : url,
+            type     : "POST",
+            contentType : "application/json",
+            data     : param,
+            dataType : "json",
+            cache   : false,
+            success  : function(result, status){
+                alert("주문이 완료 되었습니다.");
+                location.href='/';
+            },
+            error : function(jqXHR, status, error){
+
+                alert("주문이 실패 되었습니다.");
+
+            }
+        });*/
+    </script>
 </body>
 </html>

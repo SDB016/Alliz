@@ -84,4 +84,8 @@ public class Account {
     public boolean canSendConfirmEmail() {
         return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusMinutes(30));
     }
+
+    public boolean isAdmin() {
+        return this.getRole().equals(Role.ROLE_ADMIN);
+    }
 }

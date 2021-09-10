@@ -21,17 +21,13 @@ public class AdminService {
     private final ModelMapper modelMapper;
 
     public void checkRole(Account account) {
-        if (!isAdmin(account)) {
+        if (account.isAdmin()) {
             try {
                 throw new AccessDeniedException("관리자 권한이 없습니다.");
             } catch (AccessDeniedException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private boolean isAdmin(Account account) {
-        return account.getRole() == Role.ROLE_ADMIN;
     }
 
     public Reservation addNewReservation(ReservationForm form) {

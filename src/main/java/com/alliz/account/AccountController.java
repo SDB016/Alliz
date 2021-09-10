@@ -140,4 +140,9 @@ public class AccountController {
         model.addAttribute("account", byNickname);
         return "account/children";
     }
+/*
+    @GetMapping("/reservation/{reservationId}/enroll/{accountId}")
+    public String enrollReservation(@PathVariable Long reservationId, @PathVariable Long accountId, @CurrentAccount Account account) {
+
+    }*/
 }
