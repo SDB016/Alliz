@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments.html :: head(page)"></head>
 <body class="bg-light">
     <div th:replace="fragments.html::user-main-nav"></div>
@@ -9,7 +10,7 @@
     <div class="container">
         <div class="py-5 text-center">
             <h3>알리지</h3>
-            <div th:if="${account.getChildren() != null}">
+            <div sec:authorize="isAuthenticated()" th:if="${account.children != null}">
                 <select class="custom-select col-2" onchange="selectChild(this);" id="child">
                     <div th:each="child : ${account.getChildren()}">
                         <option class="text-center" th:value="${child.id}" th:text="${child.name}"></option>
