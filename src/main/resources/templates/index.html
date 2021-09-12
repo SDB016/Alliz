@@ -12,7 +12,10 @@
             <h3>알리지</h3>
             <div sec:authorize="isAuthenticated()" th:if="${account.children != null}">
                 <select class="custom-select col-2" onchange="selectChild(this);" id="child">
-                    <div th:each="child : ${account.getChildren()}">
+                    <div th:if="${account.children.size() == 0}">
+                        <option class="text-center">학생을 추가해주세요.</option>
+                    </div>
+                    <div th:each="child : ${account.getChildren()}" th:if="${account.children.size() != 0}">
                         <option class="text-center" th:value="${child.id}" th:text="${child.name}"></option>
                     </div>
                 </select>
@@ -26,7 +29,7 @@
                                     </div>
                                     <div class="card-body">
                                         <p class="card-text text-center" th:text="${reservation.reservationLocation}"></p>
-                                        <button type="button" class="btn btn-primary btn-block" th:onclick="enroll(${reservation.id})">
+                                        <button type="button" class="btn btn-primary btn-block" th:data-id="${reservation.id}" th:onclick="|sendPost('${reservation.id}')|">
                                             <i class="fa fa-calendar"></i>  예약하기
                                         </button>
                                     </div>
@@ -41,46 +44,17 @@
     <script type="application/javascript">
         // TODO 예약하기 버튼 클릭 시 데이터 전송
 
-        /*let childVal;
-        function selectChild(s) {
-            childVal = s.value;
-            alert(childVal);
-        }
+        function sendPost(reservationId) {
+            var childId = document.getElementById("child").value;
+            var url = "/enroll/" + childId + "/" + reservationId;
 
-        function enroll(id) {
-            const form = document.createElement('form');
+            var form = document.createElement('form');
             form.setAttribute('method', 'post');
-            form.setAttribute('action', '/enroll/' + childVal + '/' + id);
+            form.setAttribute('action', url);
             document.charset = "utf-8";
-            form.style.display = 'hidden';
             document.body.appendChild(form);
             form.submit();
-        }*/
-
-       /* var paramData = {
-            itemId : $("#itemId").val(),
-            count : $("#count").val()
-        };
-
-        var param = JSON.stringify(paramData);
-
-        $.ajax({
-            url      : url,
-            type     : "POST",
-            contentType : "application/json",
-            data     : param,
-            dataType : "json",
-            cache   : false,
-            success  : function(result, status){
-                alert("주문이 완료 되었습니다.");
-                location.href='/';
-            },
-            error : function(jqXHR, status, error){
-
-                alert("주문이 실패 되었습니다.");
-
-            }
-        });*/
+        }
     </script>
 </body>
 </html>
