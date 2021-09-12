@@ -1,9 +1,12 @@
 package com.alliz.domain;
 
+import com.alliz.reservation.Enrollment;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
@@ -31,6 +34,9 @@ public class Child {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
+
+    @OneToMany(mappedBy = "child")
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     public void setAccount(Account account) {
         this.account = account;

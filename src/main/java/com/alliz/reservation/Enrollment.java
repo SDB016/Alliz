@@ -1,6 +1,7 @@
 package com.alliz.reservation;
 
 import com.alliz.domain.Account;
+import com.alliz.domain.Child;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,16 +17,16 @@ public class Enrollment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Account account;
+    private Child child;
 
     @OneToMany(mappedBy = "enrollment", cascade = CascadeType.ALL)
     private List<EnrollmentReservation> enrollmentReservations = new ArrayList<>();
 
     private LocalDate enrollmentDate;
 
-    public void setAccount(Account account) {
-        this.account = account;
-        account.getEnrollments().add(this);
+    public void connectChild(Child child) {
+        this.child = child;
+        child.getEnrollments().add(this);
     }
 
     public void addReservationDate(EnrollmentReservation enrollmentReservation) {
@@ -33,9 +34,9 @@ public class Enrollment {
         enrollmentReservation.setEnrollment(this);
     }
 
-    public static Enrollment createEnrollment(Account account, EnrollmentReservation... enrollmentReservations) {
+    public static Enrollment createEnrollment(Child child, EnrollmentReservation... enrollmentReservations) {
         Enrollment enrollment = new Enrollment();
-        enrollment.setAccount(account);
+        enrollment.connectChild(child);
         for (EnrollmentReservation enrollmentReservation : enrollmentReservations) {
             enrollment.addReservationDate(enrollmentReservation);
         }

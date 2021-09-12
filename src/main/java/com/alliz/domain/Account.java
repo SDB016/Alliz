@@ -1,6 +1,5 @@
 package com.alliz.domain;
 
-import com.alliz.reservation.Enrollment;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,9 +25,6 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToMany(mappedBy = "account")
-    private List<Enrollment> enrollments = new ArrayList<>();
 
     private boolean emailVerified;
 

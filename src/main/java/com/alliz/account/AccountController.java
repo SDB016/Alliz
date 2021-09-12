@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -140,9 +141,19 @@ public class AccountController {
         model.addAttribute("account", byNickname);
         return "account/children";
     }
-/*
-    @GetMapping("/reservation/{reservationId}/enroll/{accountId}")
-    public String enrollReservation(@PathVariable Long reservationId, @PathVariable Long accountId, @CurrentAccount Account account) {
 
-    }*/
+    @PostMapping("/enroll/{childId}/{reservationId}")
+    public String enroll(@CurrentAccount Account currentAccount,
+                         @PathVariable("childId") Long childId, @PathVariable("reservationId") Long reservationId) {
+        Child child = childRepository.findById(childId).orElseThrow();
+        if (!childService.isParent(child, currentAccount)) {
+            try {
+                throw new AccessDeniedException("보호자만 본인의 학생 예약을 할 수 있습니다.");
+            } catch (AccessDeniedException e) {
+                e.printStackTrace();
+            }
+        }
+        childService.enroll(child, reservationId);
+        return "redirect:/"; // TODO 예약 내역 페이지로 보내기
+    }
 }
