@@ -9,6 +9,12 @@
     </div>
     <div class="container">
         <div class="py-5 text-center">
+            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                <span th:text="${message}">메세지</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <h3>알리지</h3>
             <div sec:authorize="isAuthenticated()" th:if="${account.children != null}">
                 <select class="custom-select col-2" onchange="selectChild(this);" id="child">
@@ -29,7 +35,7 @@
                                     </div>
                                     <div class="card-body">
                                         <p class="card-text text-center" th:text="${reservation.reservationLocation}"></p>
-                                        <button type="button" class="btn btn-primary btn-block" th:data-id="${reservation.id}" th:onclick="|sendPost('${reservation.id}')|">
+                                        <button type="button" class="btn btn-primary btn-block" th:onclick="|javascript:enrollBtnClick('${reservation.id}')|" th:value="${reservation.id}">
                                             <i class="fa fa-calendar"></i>  예약하기
                                         </button>
                                     </div>
@@ -42,18 +48,48 @@
         <footer th:replace="fragments.html::footer"></footer>
     </div>
     <script type="application/javascript">
-        // TODO 예약하기 버튼 클릭 시 데이터 전송
 
-        function sendPost(reservationId) {
-            var childId = document.getElementById("child").value;
-            var url = "/enroll/" + childId + "/" + reservationId;
+        function enrollBtnClick(reservationId) {
+            var token = $("meta[name='_csrf']").attr('content');
+            var header = $("meta[name='_csrf_header']").attr('content');
 
-            var form = document.createElement('form');
-            form.setAttribute('method', 'post');
-            form.setAttribute('action', url);
-            document.charset = "utf-8";
-            document.body.appendChild(form);
-            form.submit();
+            $.ajax({
+                url: "/enroll",
+                type: "POST",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "childId": $("#child").val(),
+                    "reservationId": reservationId
+                }),
+                beforeSend: function (xhr) {
+                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType: "text",
+                cache: false,
+                success: function (response, result, status) {
+                    console.log(result);
+                    console.log(status);
+                    document.open();
+                    document.write(response);
+                    document.close();
+                },
+                error: function (data, jqXHR, status, error) {
+
+                    if (jqXHR.status == '401') {
+                        alert('로그인 후 이용해주세요');
+                        location.href = '/login';
+                    } else {
+                        console.warn(jqXHR.responseText);
+                        console.log("readyState: " + jqXHR.readyState);
+                        console.log("responseText: " + jqXHR.responseText);
+                        console.log("status: " + jqXHR.status);
+                        console.log("text status: " + status);
+                        console.log("error: " + error);
+                    }
+                }
+            })
         }
     </script>
 </body>

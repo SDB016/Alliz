@@ -38,12 +38,12 @@ public class ChildService {
         return child.getAccount().getId().equals(account.getId());
     }
 
-    public Long enroll(Child child, Long reservationId) {
+    public Reservation enroll(Child child, Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
         EnrollmentReservation enrollmentReservation = EnrollmentReservation.createEnrollmentReservation(reservation);
         Enrollment enrollment = Enrollment.createEnrollment(child, enrollmentReservation);
 
         enrollmentRepository.save(enrollment);
-        return enrollment.getId();
+        return reservation;
     }
 }

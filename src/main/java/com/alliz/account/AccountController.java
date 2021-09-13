@@ -2,6 +2,7 @@ package com.alliz.account;
 
 import com.alliz.domain.Account;
 import com.alliz.domain.Child;
+import com.alliz.reservation.Reservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -142,9 +144,12 @@ public class AccountController {
         return "account/children";
     }
 
-    @PostMapping("/enroll/{childId}/{reservationId}")
+    @PostMapping("/enroll")
     public String enroll(@CurrentAccount Account currentAccount,
-                         @PathVariable("childId") Long childId, @PathVariable("reservationId") Long reservationId) {
+                         @RequestBody Map<String, String> param, RedirectAttributes attributes) {
+        long childId = Long.parseLong(param.get("childId"));
+        long reservationId = Long.parseLong(param.get("reservationId"));
+
         Child child = childRepository.findById(childId).orElseThrow();
         if (!childService.isParent(child, currentAccount)) {
             try {
@@ -153,7 +158,9 @@ public class AccountController {
                 e.printStackTrace();
             }
         }
-        childService.enroll(child, reservationId);
-        return "redirect:/"; // TODO 예약 내역 페이지로 보내기
+        Reservation reservation = childService.enroll(child, reservationId);// TODO 중복 예약 막기
+        attributes.addFlashAttribute("message",
+                "[장소: " + reservation.getReservationLocation()+", 시간: "+reservation.getReservationTime()+"] 배차가 예약됐습니다.");
+        return "redirect:/";
     }
 }
