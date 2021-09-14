@@ -1,5 +1,7 @@
 package com.alliz.config;
 
+import com.alliz.account.admin.ReservationForm;
+import com.alliz.reservation.Reservation;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.modelmapper.spi.NameTokenizer;
@@ -22,6 +24,10 @@ public class AppConfig {
         modelMapper.getConfiguration()
                 .setDestinationNameTokenizer(NameTokenizers.UNDERSCORE)
                 .setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
+
+        modelMapper.createTypeMap(ReservationForm.class, Reservation.class)
+                .addMapping(ReservationForm::getReservationDateTimeAsDateTime, Reservation::setReservationDateTime);
+
         return modelMapper;
     }
 }

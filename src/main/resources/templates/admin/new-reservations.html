@@ -39,9 +39,15 @@
 
                         <div class="form-group">
                             <label for="time">시간</label>
-                            <input id='time' type='text' name='time' class="form-control" aria-describedby="timeHelp" th:field="*{reservationTime}" required>
+                            <div class="input-group date" id="time" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#time"
+                                       aria-describedby="timeHelp" th:field="*{reservationDateTime}" required>
+                                <div class="input-group-append" data-target="#time" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
                             <small id="timeHelp" class="form-text text-muted">
-                                차량이 도착할 시간을 등록하세요.
+                                차량이 도착할 날짜와 시간을 등록하세요.
                             </small>
                         </div>
 
@@ -57,9 +63,22 @@
         <div th:replace="fragments.html :: footer"></div>
     </div>
     <script th:replace="fragments.html :: tooltip"></script>
-    <script type="text/javascript" src="/node_modules/timepicki/js/timepicki.js"></script>
-    <script type ="application/javascript">
-        $('#time').timepicki();
+    <script src="/node_modules/moment/min/moment-with-locales.js"></script>
+    <script src="/node_modules/tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script type="application/javascript">
+
+        $(function () {
+            $('#time').datetimepicker({
+                sideBySide: true,
+                format: 'yyyy-MM-DD HH:mm'
+            });
+
+            /*
+            주말 비활성화
+            $('#time').datetimepicker({
+                daysOfWeekDisabled: [0, 6]
+            });*/
+        });
     </script>
 </body>
 </html>

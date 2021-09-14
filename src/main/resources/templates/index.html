@@ -31,7 +31,7 @@
                             <div th:each="reservation : ${reservationList}">
                                 <div class="card">
                                     <div class="card-header text-center">
-                                        <h4 th:text="${reservation.reservationTime}"></h4>
+                                        <h4 th:text="${reservation.getReservationDateTimeAsString()}"></h4>
                                     </div>
                                     <div class="card-body">
                                         <p class="card-text text-center" th:text="${reservation.reservationLocation}"></p>

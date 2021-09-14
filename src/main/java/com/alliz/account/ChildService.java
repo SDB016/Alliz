@@ -42,7 +42,6 @@ public class ChildService {
 
     public Reservation enroll(Child child, Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
-        reservation.getReservationTime()
         Enrollment enrollment = Enrollment.createEnrollment(child, reservation);
 
         enrollmentRepository.save(enrollment);

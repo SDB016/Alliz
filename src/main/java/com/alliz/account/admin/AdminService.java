@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,8 +36,8 @@ public class AdminService {
         return reservationRepository.save(reservation);
     }
 
-    public boolean isAlreadyReservation(String reservationTime) {
-        return reservationRepository.findByReservationTime(reservationTime) != null;
+    public boolean isAlreadyReservation(LocalDateTime reservationDateTime) {
+        return reservationRepository.findByReservationDateTime(reservationDateTime) != null;
     }
 
     public List<Reservation> getAllReservations() {

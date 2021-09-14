@@ -162,7 +162,7 @@ public class AccountController {
         }
         Reservation reservation = childService.enroll(child, reservationId);
         attributes.addFlashAttribute("message",
-                "[장소: " + reservation.getReservationLocation()+", 시간: "+reservation.getReservationTime()+"] 배차가 예약됐습니다.");
+                "[장소: " + reservation.getReservationLocation()+", 시간: "+reservation.getReservationDateTime()+"] 배차가 예약됐습니다.");
         return "redirect:/";
     }
 }

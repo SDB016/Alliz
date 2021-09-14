@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.mail.Message;
 import javax.validation.Valid;
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Controller
@@ -46,7 +44,7 @@ public class AdminController {
             model.addAttribute(account);
             return "admin/new-reservations";
         }
-        if (adminService.isAlreadyReservation(form.getReservationTime())) {
+        if (adminService.isAlreadyReservation(form.getReservationDateTimeAsDateTime())) {
             model.addAttribute("error", "이 시간의 배차는 이미 등록되었습니다. 배차조회를 확인하세요.");
             model.addAttribute(account);
             return "admin/new-reservations";
@@ -54,7 +52,7 @@ public class AdminController {
 
         adminService.addNewReservation(form);
 
-        String message = "[장소: " + form.getReservationLocation() + ", 시간: " + form.getReservationTime() + "] 차량 시간을 등록했습니다.";
+        String message = "[장소: " + form.getReservationLocation() + ", 시간: " + form.getReservationDateTime() + "] 차량 시간을 등록했습니다.";
         attributes.addFlashAttribute("message", message);
         return "redirect:/admin/new-reservations";
     }
@@ -84,7 +82,7 @@ public class AdminController {
             model.addAttribute(account);
             return "admin/edit-reservations";
         }
-        if (adminService.isAlreadyReservation(form.getReservationTime())) {
+        if (adminService.isAlreadyReservation(form.getReservationDateTimeAsDateTime())) {
             model.addAttribute("error", "이 시간의 배차는 이미 등록되었습니다. 배차조회를 확인하세요.");
             model.addAttribute(account);
             return "admin/edit-reservations";
