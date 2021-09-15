@@ -3,6 +3,7 @@ package com.alliz.account;
 import com.alliz.domain.Account;
 import com.alliz.domain.Child;
 import com.alliz.reservation.Reservation;
+import com.alliz.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ public class AccountController {
     private final AccountRepository accountRepository;
     private final ChildRepository childRepository;
     private final ChildService childService;
+    private final ReservationRepository reservationRepository;
 
     @InitBinder("signUpForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -158,7 +160,7 @@ public class AccountController {
                 e.printStackTrace();
             }
         }
-        Reservation reservation = childService.enroll(child, reservationId);// TODO 중복 예약 막기
+        Reservation reservation = childService.enroll(child, reservationId);
         attributes.addFlashAttribute("message",
                 "[장소: " + reservation.getReservationLocation()+", 시간: "+reservation.getReservationTime()+"] 배차가 예약됐습니다.");
         return "redirect:/";

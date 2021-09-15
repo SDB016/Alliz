@@ -21,7 +21,7 @@ public class AdminService {
     private final ModelMapper modelMapper;
 
     public void checkRole(Account account) {
-        if (account.isAdmin()) {
+        if (!account.isAdmin()) {
             try {
                 throw new AccessDeniedException("관리자 권한이 없습니다.");
             } catch (AccessDeniedException e) {

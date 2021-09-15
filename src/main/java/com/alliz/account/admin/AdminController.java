@@ -40,7 +40,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/reservation/add")
-    public String addReservation(@CurrentAccount Account account, @Valid ReservationForm form, Errors errors, Model model, RedirectAttributes attributes) {
+    public String uploadReservation(@CurrentAccount Account account, @Valid ReservationForm form, Errors errors, Model model, RedirectAttributes attributes) {
         adminService.checkRole(account);
         if (errors.hasErrors()) {
             model.addAttribute(account);

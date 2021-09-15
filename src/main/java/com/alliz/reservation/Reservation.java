@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +19,12 @@ public class Reservation {
     @Id @GeneratedValue
     private Long id;
 
-    private String reservationTime;
+    private LocalDateTime reservationTime;
+
+    private LocalDate reservationDate;
 
     private String reservationLocation;
 
     @OneToMany(mappedBy = "reservation")
-    private List<EnrollmentReservation> enrollmentReservations = new ArrayList<>();
+    private List<Enrollment> enrollmentList = new ArrayList<>();
 }

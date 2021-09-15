@@ -8,6 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -40,8 +42,8 @@ public class ChildService {
 
     public Reservation enroll(Child child, Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
-        EnrollmentReservation enrollmentReservation = EnrollmentReservation.createEnrollmentReservation(reservation);
-        Enrollment enrollment = Enrollment.createEnrollment(child, enrollmentReservation);
+        reservation.getReservationTime()
+        Enrollment enrollment = Enrollment.createEnrollment(child, reservation);
 
         enrollmentRepository.save(enrollment);
         return reservation;

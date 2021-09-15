@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,28 +20,26 @@ public class Enrollment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Child child;
 
-    @OneToMany(mappedBy = "enrollment", cascade = CascadeType.ALL)
-    private List<EnrollmentReservation> enrollmentReservations = new ArrayList<>();
+    private LocalDateTime enrollmentDateTime;
 
-    private LocalDate enrollmentDate;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Reservation reservation;
 
-    public void connectChild(Child child) {
+    public void addChild(Child child) {
         this.child = child;
         child.getEnrollments().add(this);
     }
 
-    public void addReservationDate(EnrollmentReservation enrollmentReservation) {
-        this.getEnrollmentReservations().add(enrollmentReservation);
-        enrollmentReservation.setEnrollment(this);
+    private void addReservation(Reservation reservation) {
+        this.setReservation(reservation);
+        reservation.getEnrollmentList().add(this);
     }
 
-    public static Enrollment createEnrollment(Child child, EnrollmentReservation... enrollmentReservations) {
+    public static Enrollment createEnrollment(Child child, Reservation reservation) {
         Enrollment enrollment = new Enrollment();
-        enrollment.connectChild(child);
-        for (EnrollmentReservation enrollmentReservation : enrollmentReservations) {
-            enrollment.addReservationDate(enrollmentReservation);
-        }
-        enrollment.setEnrollmentDate(LocalDate.now());
+        enrollment.addChild(child);
+        enrollment.addReservation(reservation);
+        enrollment.setEnrollmentDateTime(LocalDateTime.now());
         return enrollment;
     }
 }
