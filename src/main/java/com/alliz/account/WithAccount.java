@@ -1,4 +1,4 @@
-package com.alliz;
+package com.alliz.account;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
 

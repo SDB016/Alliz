@@ -1,14 +1,13 @@
-package com.alliz.account;
+package com.alliz.child;
 
-import com.alliz.domain.Account;
-import com.alliz.domain.Child;
+import com.alliz.account.Account;
+import com.alliz.enrollment.Enrollment;
+import com.alliz.enrollment.EnrollmentRepository;
 import com.alliz.reservation.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

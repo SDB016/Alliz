@@ -1,10 +1,13 @@
 package com.alliz.settings;
 
 import com.alliz.account.*;
-import com.alliz.domain.Account;
-import com.alliz.domain.Child;
+import com.alliz.account.Account;
+import com.alliz.account.dto.ProfileForm;
+import com.alliz.child.Child;
+import com.alliz.child.ChildForm;
+import com.alliz.child.ChildRepository;
+import com.alliz.child.ChildService;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Not;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,5 +1,7 @@
-package com.alliz.account;
+package com.alliz.account.dto;
 
+import com.alliz.account.AccountRepository;
+import com.alliz.account.dto.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

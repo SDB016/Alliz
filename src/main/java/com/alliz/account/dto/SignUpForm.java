@@ -1,8 +1,7 @@
-package com.alliz.account;
+package com.alliz.account.dto;
 
-import com.alliz.domain.Role;
+import com.alliz.account.Role;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

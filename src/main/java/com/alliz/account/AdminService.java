@@ -1,8 +1,8 @@
-package com.alliz.account.admin;
+package com.alliz.account;
 
-import com.alliz.domain.Account;
-import com.alliz.domain.Role;
+import com.alliz.account.Account;
 import com.alliz.reservation.Reservation;
+import com.alliz.reservation.ReservationForm;
 import com.alliz.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

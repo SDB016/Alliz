@@ -1,9 +1,9 @@
 package com.alliz.account;
 
-import com.alliz.WithAccount;
-import com.alliz.domain.Account;
-import com.alliz.domain.Child;
-import com.alliz.domain.Role;
+import com.alliz.account.dto.SignUpForm;
+import com.alliz.child.Child;
+import com.alliz.child.ChildForm;
+import com.alliz.child.ChildRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.alliz.account.admin;
+package com.alliz.reservation;
 
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;

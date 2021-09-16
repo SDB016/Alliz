@@ -1,12 +1,9 @@
-package com.alliz.account;
+package com.alliz.child;
 
-import com.alliz.domain.Child;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 

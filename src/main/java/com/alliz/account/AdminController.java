@@ -1,8 +1,7 @@
-package com.alliz.account.admin;
+package com.alliz.account;
 
-import com.alliz.account.CurrentAccount;
-import com.alliz.domain.Account;
 import com.alliz.reservation.Reservation;
+import com.alliz.reservation.ReservationForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;

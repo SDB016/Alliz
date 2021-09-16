@@ -1,7 +1,9 @@
 package com.alliz.account;
 
-import com.alliz.domain.Account;
-import com.alliz.domain.Child;
+import com.alliz.account.dto.ProfileForm;
+import com.alliz.account.dto.SignUpForm;
+import com.alliz.child.Child;
+import com.alliz.child.ChildRepository;
 import com.alliz.settings.NotificationsForm;
 import com.alliz.settings.PasswordForm;
 import lombok.RequiredArgsConstructor;

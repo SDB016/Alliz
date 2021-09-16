@@ -2,8 +2,7 @@ package com.alliz;
 
 import com.alliz.account.AccountService;
 import com.alliz.account.CurrentAccount;
-import com.alliz.domain.Account;
-import com.alliz.domain.Role;
+import com.alliz.account.Account;
 import com.alliz.reservation.Reservation;
 import com.alliz.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,6 @@
-package com.alliz;
+package com.alliz.account;
 
-import com.alliz.account.AccountService;
-import com.alliz.account.SignUpForm;
-import com.alliz.account.UserAccount;
-import com.alliz.domain.Role;
+import com.alliz.account.dto.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

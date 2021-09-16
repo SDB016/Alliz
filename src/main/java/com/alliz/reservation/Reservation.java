@@ -1,13 +1,12 @@
 package com.alliz.reservation;
 
-import lombok.AccessLevel;
+import com.alliz.enrollment.Enrollment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

@@ -1,5 +1,6 @@
-package com.alliz.domain;
+package com.alliz.account;
 
+import com.alliz.child.Child;
 import lombok.*;
 
 import javax.persistence.*;

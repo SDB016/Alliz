@@ -1,12 +1,12 @@
 package com.alliz.settings;
 
-import com.alliz.WithAccount;
+import com.alliz.account.WithAccount;
 import com.alliz.account.AccountRepository;
 import com.alliz.account.AccountService;
-import com.alliz.account.ChildRepository;
-import com.alliz.domain.Account;
-import com.alliz.domain.Child;
-import com.alliz.domain.Role;
+import com.alliz.child.ChildRepository;
+import com.alliz.account.Account;
+import com.alliz.child.Child;
+import com.alliz.account.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.web.util.NestedServletException;
 
 import javax.transaction.Transactional;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;

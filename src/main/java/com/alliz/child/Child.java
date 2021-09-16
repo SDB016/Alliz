@@ -1,6 +1,7 @@
-package com.alliz.domain;
+package com.alliz.child;
 
-import com.alliz.reservation.Enrollment;
+import com.alliz.account.Account;
+import com.alliz.enrollment.Enrollment;
 import lombok.*;
 
 import javax.persistence.*;

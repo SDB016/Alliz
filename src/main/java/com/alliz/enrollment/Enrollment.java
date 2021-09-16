@@ -1,14 +1,11 @@
-package com.alliz.reservation;
+package com.alliz.enrollment;
 
-import com.alliz.domain.Account;
-import com.alliz.domain.Child;
+import com.alliz.child.Child;
+import com.alliz.reservation.Reservation;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
