@@ -141,15 +141,14 @@ public class SettingsController {
     @PostMapping("/settings/child/{id}")
     public String updateChildProfile(@CurrentAccount Account currentAccount, @PathVariable Long id, @Valid ChildForm childForm, Errors errors,
                                      Model model) throws IllegalAccessException {
+        Child child = childRepository.findById(id).orElseThrow();
+        checkParent(currentAccount, child);
         if (errors.hasErrors()) {
-            Child child = childRepository.findById(id).orElseThrow();
             model.addAttribute(child);
             model.addAttribute(currentAccount);
             return "settings/child";
         }
-        Child child = childRepository.findById(id).orElseThrow();
 
-        checkParent(currentAccount, child);
         childService.updateProfile(child, childForm);
         return "redirect:/profile/" + currentAccount.getNickname() + "/children";
     }

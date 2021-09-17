@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <label class="col-form-label">권한</label>
                         <select class="form-control" th:field="*{role}">
-                            <option th:each="role : ${T(com.alliz.domain.Role).values()}"
+                            <option th:each="role : ${T(com.alliz.account.Role).values()}"
                                     th:value="${role.name()}"
                                     th:text="${role.name()}">
                                 val
