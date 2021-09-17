@@ -168,4 +168,12 @@ public class AccountController {
                 "[장소: " + reservation.getReservationLocation()+", 시간: "+reservation.getReservationDateTime()+"] 배차가 예약됐습니다.");
         return "redirect:/";
     }
+
+    @GetMapping("/enrollments")
+    public String viewEnrollments(@CurrentAccount Account currentAccount, Model model) {
+        Account account = accountService.getAccountWithChildren(currentAccount.getNickname());
+        model.addAttribute("account", account);
+
+        return "account/enrollments";
+    }
 }

@@ -19,7 +19,7 @@ public class Enrollment {
 
     private LocalDateTime enrollmentDateTime;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Reservation reservation;
 
     public void addChild(Child child) {
