@@ -46,4 +46,9 @@ public class ChildService {
         enrollmentRepository.save(enrollment);
         return reservation;
     }
+
+    public void disenroll(Long enrollmentId) {
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow();
+        enrollmentRepository.delete(enrollment);
+    }
 }

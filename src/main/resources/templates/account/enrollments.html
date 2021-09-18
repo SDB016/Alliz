@@ -11,7 +11,7 @@
                     <h2 class="col-sm-12">예약 내역</h2>
                 </div>
                 <div class="row mt-3">
-                    <div th:each="child : ${account.getChildren()}">
+                    <div th:each="child : ${account.children}">
                         <h4 class="col-sm-12" th:text="${child.name}"></h4>
                         <div class="card-columns">
                             <div th:each="enrollment : ${child.getEnrollments()}">
@@ -21,7 +21,7 @@
                                     </div>
                                     <div class="card-body">
                                         <p class="card-text text-center" th:text="${enrollment.getReservation().getReservationLocation()}"></p>
-                                        <a class="btn" th:href="@{'/account/enrollment/remove/' + ${enrollment.id}}">
+                                        <a class="btn" th:href="@{'/enrollment/' + ${enrollment.id} + '/remove/' + ${child.id}}">
                                             <i class="fa fa-trash fa-2x"></i>
                                         </a>
                                     </div>

@@ -36,7 +36,7 @@ public class Child {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToMany(mappedBy = "child")
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     private List<Enrollment> enrollments = new ArrayList<>();
 
     public void setAccount(Account account) {

@@ -176,4 +176,14 @@ public class AccountController {
 
         return "account/enrollments";
     }
+
+    @GetMapping("/enrollment/{enrollmentId}/remove/{childId}")
+    public String removeEnrollment(@CurrentAccount Account currentAccount,
+                                   @PathVariable("enrollmentId") Long enrollmentId, @PathVariable("childId")Long childId) {
+        Child child = childRepository.findById(childId).orElseThrow();
+        childService.isParent(child, currentAccount);
+        childService.disenroll(enrollmentId);
+
+        return "redirect:/enrollments";
+    }
 }
