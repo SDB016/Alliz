@@ -2,7 +2,12 @@ package com.alliz.settings;
 
 import com.alliz.account.*;
 import com.alliz.account.Account;
+import com.alliz.account.dto.NicknameForm;
+import com.alliz.account.dto.NotificationsForm;
+import com.alliz.account.dto.PasswordForm;
 import com.alliz.account.dto.ProfileForm;
+import com.alliz.account.validator.NicknameValidator;
+import com.alliz.account.validator.PasswordFormValidator;
 import com.alliz.child.Child;
 import com.alliz.child.ChildForm;
 import com.alliz.child.ChildRepository;
@@ -27,13 +32,19 @@ public class SettingsController {
 
     private final AccountService accountService;
     private final PasswordFormValidator passwordFormValidator;
+    private final NicknameValidator nicknameValidator;
     private final ChildService childService;
     private final ChildRepository childRepository;
     private final ModelMapper modelMapper;
 
     @InitBinder("passwordForm")
-    public void initBinder(WebDataBinder webDataBinder) {
+    public void passwordFormInitBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(passwordFormValidator);
+    }
+
+    @InitBinder("nicknameForm")
+    public void nicknameFormInitBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(nicknameValidator);
     }
 
     @GetMapping("/settings/profile")
@@ -153,6 +164,25 @@ public class SettingsController {
         return "redirect:/profile/" + currentAccount.getNickname() + "/children";
     }
 
+    @GetMapping("/settings/account")
+    public String updateAccountForm(@CurrentAccount Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account, NicknameForm.class));
+        return "settings/account";
+    }
+
+    @PostMapping("/settings/account")
+    public String updateAccount(@CurrentAccount Account account, @Valid NicknameForm nicknameForm, Errors errors,
+                                Model model, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return "settings/account";
+        }
+
+        accountService.updateNickname(account, nicknameForm.getNickname());
+        attributes.addFlashAttribute("message", "닉네임을 수정했습니다.");
+        return "redirect:/settings/account";
+    }
     private void checkParent(Account currentAccount, Child child) throws IllegalAccessException {
         if (!child.getAccount().getId().equals(currentAccount.getId())) {
             throw new IllegalAccessException("보호자가 아니면 접근할 수 없습니다.");

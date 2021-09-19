@@ -1,11 +1,11 @@
 package com.alliz.account;
 
+import com.alliz.account.dto.NotificationsForm;
+import com.alliz.account.dto.PasswordForm;
 import com.alliz.account.dto.ProfileForm;
 import com.alliz.account.dto.SignUpForm;
 import com.alliz.child.Child;
 import com.alliz.child.ChildRepository;
-import com.alliz.settings.NotificationsForm;
-import com.alliz.settings.PasswordForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
@@ -161,5 +161,11 @@ public class AccountService implements UserDetailsService {
             throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
         }
         return byNickname;
+    }
+
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        login(account);
     }
 }

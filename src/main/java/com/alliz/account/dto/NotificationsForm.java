@@ -1,4 +1,4 @@
-package com.alliz.settings;
+package com.alliz.account.dto;
 
 import lombok.Data;
 
