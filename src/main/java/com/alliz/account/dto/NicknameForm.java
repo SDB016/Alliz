@@ -11,6 +11,6 @@ public class NicknameForm {
 
     @NotBlank
     @Length(min = 3, max = 20)
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9_-]{3,20}$")
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣A-Za-z0-9_-]{3,20}$")
     private String nickname;
 }

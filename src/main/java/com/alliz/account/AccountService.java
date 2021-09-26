@@ -40,15 +40,14 @@ public class AccountService implements UserDetailsService {
     }
 
     private Account saveNewAccount(SignUpForm signUpForm) {
-        Account account = Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(passwordEncoder.encode(signUpForm.getPassword()))
-                .role(signUpForm.getRole())
-                .childBringBackByWeb(true)
-                .childTakingByWeb(true)
-                .children(new HashSet<>())
-                .build();
+        Account account = new Account();
+        account.setEmail(signUpForm.getEmail());
+        account.setNickname(signUpForm.getNickname());
+        account.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        account.setRole(signUpForm.getRole());
+        account.setChildBringBackByWeb(true);
+        account.setChildTakingByWeb(true);
+        account.setChildren(new HashSet<>());
         return accountRepository.save(account);
     }
 
