@@ -9,22 +9,23 @@ import java.util.*;
 
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
-@Builder @AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor @NoArgsConstructor
 @ToString(exclude = "children")
 public class Account {
 
     @Id @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nickname;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
     private boolean emailVerified;
@@ -60,6 +61,27 @@ public class Account {
 
     private boolean childBringBackByEmail;
 
+    @Builder
+    public Account(String nickname, String email, String profileImage, Role role) {
+        this.nickname = nickname;
+        this.email = email;
+        this.profileImage = profileImage;
+        this.role = role;
+        this.children = new HashSet<>();
+        this.setChildTakingByWeb(true);
+        this.setChildBringBackByWeb(true);
+    }
+
+    public Account update(String nickname, String profileImage) {
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+        return this;
+    }
+
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
+
     public String getBanner() {
         return banner != null ? banner : "/images/default_banner.png";
     }
@@ -83,6 +105,6 @@ public class Account {
     }
 
     public boolean isAdmin() {
-        return this.getRole().equals(Role.ROLE_ADMIN);
+        return this.getRole().equals(Role.ADMIN);
     }
 }

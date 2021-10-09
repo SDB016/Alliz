@@ -36,7 +36,7 @@ class MainControllerTest {
         signUpForm.setNickname("user");
         signUpForm.setPassword("aaa123123");
         signUpForm.setPasswordConfirm("aaa123123");
-        signUpForm.setRole(Role.ROLE_USER);
+        signUpForm.setRole(Role.USER);
         accountService.processNewAccount(signUpForm);
     }
 

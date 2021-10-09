@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.NestedServletException;
 
 import javax.transaction.Transactional;
@@ -179,7 +180,7 @@ class SettingsControllerTest {
     void update_notifications_error() throws Exception {
         Account account = accountRepository.findByNickname("user");
 
-        mockMvc.perform(post("/settings/notifications")
+        mockMvc.perform(post("/settings/account")
                         .param("childTakingByWeb", "abc")
                         .param("childTakingByEmail", "abc")
                         .param("childBringBackByWeb", "abc")
@@ -194,6 +195,56 @@ class SettingsControllerTest {
         assertFalse(account.isChildTakingByEmail());
         assertTrue(account.isChildBringBackByWeb());
         assertFalse(account.isChildBringBackByEmail());
+    }
+
+
+    @WithAccount("user")
+    @DisplayName("프로필 업데이트 뷰 - 계정")
+    @Test
+    void update_account_form() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+
+        mockMvc.perform(get("/settings/account"))
+                .andExpect(model().attribute("account", account))
+                .andExpect(model().attributeExists("nicknameForm"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings/account"));
+    }
+
+    @WithAccount("user")
+    @DisplayName("프로필 - 계정 업데이트 - 성공")
+    @Test
+    void update_account_success() throws Exception {
+        Account account = accountRepository.findByNickname("user");
+        String newNickname = "newUser";
+
+        mockMvc.perform(post("/settings/account")
+                        .param("nickname", newNickname)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/settings/account"));
+
+        assertEquals(newNickname, account.getNickname());
+        assertNull(accountRepository.findByNickname("user"));
+    }
+
+    @WithAccount("user")
+    @DisplayName("프로필 - 계정 업데이트 - 실패")
+    @Test
+    void update_account_error() throws Exception {
+        Account stranger = makeStranger();
+
+        Account account = accountRepository.findByNickname("user");
+        String newNickname = stranger.getNickname();
+
+        mockMvc.perform(post("/settings/account")
+                        .param("nickname", newNickname)
+                        .with(csrf()))
+                .andExpect(model().hasErrors())
+                .andExpect(status().isOk())
+                .andExpect(view().name("/settings/account"));
+
+        assertNotEquals(newNickname, account.getNickname());
     }
 
     @WithAccount("user")
@@ -287,7 +338,12 @@ class SettingsControllerTest {
     }
 
     private Account makeStranger() {
-        return Account.builder().nickname("stranger").email("email@email.com")
-                .password("abc123123").role(Role.ROLE_USER).children(new HashSet<>()).build();
+        Account account = new Account();
+        account.setNickname("stranger");
+        account.setEmail("email@email.com");
+        account.setPassword(passwordEncoder.encode("abc123123"));
+        account.setRole(Role.USER);
+        account.setChildren(new HashSet<>());
+        return account;
     }
 }

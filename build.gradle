@@ -30,6 +30,10 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:2.4.4'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 
+    //OAuth2
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'
+
+
     // npm
     implementation 'com.github.node-gradle:gradle-node-plugin:3.1.0'
 
