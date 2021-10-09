@@ -1,12 +1,8 @@
-package com.alliz.account;
+package com.alliz.account.dto;
 
-import com.alliz.domain.Account;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Pattern;
 
 @Data

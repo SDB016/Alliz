@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments.html :: head (page='login')"></head>
 <body style="background-color: #666666;">
-<nav th:replace="fragments.html::main-nav"></nav>
+<nav th:replace="fragments.html::user-main-nav"></nav>
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
@@ -50,11 +50,12 @@
                         </button>
                     </div>
 
-                    <!--<div class="text-center p-t-46 p-b-20">
+                    <div class="text-center p-t-46 p-b-20">
                             <span class="txt2">
                                 or sign up using
                             </span>
-                    </div>-->
+                        <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+                    </div>
                 </form>
 
                 <div class="login100-more" style="background-image: url('images/bg-01.jpg');">

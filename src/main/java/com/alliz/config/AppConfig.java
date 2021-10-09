@@ -1,8 +1,9 @@
 package com.alliz.config;
 
+import com.alliz.reservation.ReservationForm;
+import com.alliz.reservation.Reservation;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
-import org.modelmapper.spi.NameTokenizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -22,6 +23,10 @@ public class AppConfig {
         modelMapper.getConfiguration()
                 .setDestinationNameTokenizer(NameTokenizers.UNDERSCORE)
                 .setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
+
+        modelMapper.createTypeMap(ReservationForm.class, Reservation.class)
+                .addMapping(ReservationForm::getReservationDateTimeAsDateTime, Reservation::setReservationDateTime);
+
         return modelMapper;
     }
 }

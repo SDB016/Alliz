@@ -1,5 +1,6 @@
-package com.alliz.settings;
+package com.alliz.account.validator;
 
+import com.alliz.account.dto.PasswordForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

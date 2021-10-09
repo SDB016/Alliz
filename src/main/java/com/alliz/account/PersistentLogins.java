@@ -1,4 +1,4 @@
-package com.alliz.domain;
+package com.alliz.account;
 
 import org.hibernate.validator.constraints.Length;
 

@@ -1,7 +1,13 @@
 package com.alliz.account;
 
-import com.alliz.domain.Account;
-import com.alliz.domain.Child;
+import com.alliz.account.dto.SignUpForm;
+import com.alliz.account.dto.SignUpFormValidator;
+import com.alliz.child.Child;
+import com.alliz.child.ChildForm;
+import com.alliz.child.ChildRepository;
+import com.alliz.child.ChildService;
+import com.alliz.reservation.Reservation;
+import com.alliz.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
+import java.nio.file.AccessDeniedException;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +33,7 @@ public class AccountController {
     private final AccountRepository accountRepository;
     private final ChildRepository childRepository;
     private final ChildService childService;
+    private final ReservationRepository reservationRepository;
 
     @InitBinder("signUpForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -139,5 +147,43 @@ public class AccountController {
         model.addAttribute("isOwner", byNickname.equals(account));
         model.addAttribute("account", byNickname);
         return "account/children";
+    }
+
+    @PostMapping("/enroll")
+    public String enroll(@CurrentAccount Account currentAccount,
+                         @RequestBody Map<String, String> param, RedirectAttributes attributes) {
+        long childId = Long.parseLong(param.get("childId"));
+        long reservationId = Long.parseLong(param.get("reservationId"));
+
+        Child child = childRepository.findById(childId).orElseThrow();
+        if (!childService.isParent(child, currentAccount)) {
+            try {
+                throw new AccessDeniedException("보호자만 본인의 학생 예약을 할 수 있습니다.");
+            } catch (AccessDeniedException e) {
+                e.printStackTrace();
+            }
+        }
+        Reservation reservation = childService.enroll(child, reservationId);
+        attributes.addFlashAttribute("message",
+                "[장소: " + reservation.getReservationLocation()+", 시간: "+reservation.getReservationDateTime()+"] 배차가 예약됐습니다.");
+        return "redirect:/";
+    }
+
+    @GetMapping("/enrollments")
+    public String viewEnrollments(@CurrentAccount Account currentAccount, Model model) {
+        Account account = accountService.getAccountWithChildren(currentAccount.getNickname());
+        model.addAttribute("account", account);
+
+        return "account/enrollments";
+    }
+
+    @GetMapping("/enrollment/{enrollmentId}/remove/{childId}")
+    public String removeEnrollment(@CurrentAccount Account currentAccount,
+                                   @PathVariable("enrollmentId") Long enrollmentId, @PathVariable("childId")Long childId) {
+        Child child = childRepository.findById(childId).orElseThrow();
+        childService.isParent(child, currentAccount);
+        childService.disenroll(enrollmentId);
+
+        return "redirect:/enrollments";
     }
 }

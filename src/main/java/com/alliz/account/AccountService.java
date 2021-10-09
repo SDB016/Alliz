@@ -1,14 +1,17 @@
 package com.alliz.account;
 
-import com.alliz.domain.Account;
-import com.alliz.domain.Child;
-import com.alliz.settings.NotificationsForm;
-import com.alliz.settings.PasswordForm;
+import com.alliz.account.dto.NotificationsForm;
+import com.alliz.account.dto.PasswordForm;
+import com.alliz.account.dto.ProfileForm;
+import com.alliz.account.dto.SignUpForm;
+import com.alliz.child.Child;
+import com.alliz.child.ChildRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,14 +40,14 @@ public class AccountService implements UserDetailsService {
     }
 
     private Account saveNewAccount(SignUpForm signUpForm) {
-        Account account = Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(passwordEncoder.encode(signUpForm.getPassword()))
-                .childBringBackByWeb(true)
-                .childTakingByWeb(true)
-                .children(new HashSet<>())
-                .build();
+        Account account = new Account();
+        account.setEmail(signUpForm.getEmail());
+        account.setNickname(signUpForm.getNickname());
+        account.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        account.setRole(signUpForm.getRole());
+        account.setChildBringBackByWeb(true);
+        account.setChildTakingByWeb(true);
+        account.setChildren(new HashSet<>());
         return accountRepository.save(account);
     }
 
@@ -60,10 +63,13 @@ public class AccountService implements UserDetailsService {
     }
 
     public void login(Account account) {
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(account.getRole().name()));
+
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                new UserAccount(account), // principle
+                new UserAccount(account, roles), // principle
                 account.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                roles);
         SecurityContextHolder.getContext().setAuthentication(token);
     }
 
@@ -78,7 +84,11 @@ public class AccountService implements UserDetailsService {
         if (account == null) {
             throw new UsernameNotFoundException(emailOrNickname);
         }
-        return new UserAccount(account);
+
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(account.getRole().name()));
+
+        return new UserAccount(account, roles);
     }
 
     public void addChild(Account account, Child child) {
@@ -150,5 +160,11 @@ public class AccountService implements UserDetailsService {
             throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
         }
         return byNickname;
+    }
+
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        login(account);
     }
 }

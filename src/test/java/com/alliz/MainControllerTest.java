@@ -2,7 +2,8 @@ package com.alliz;
 
 import com.alliz.account.AccountRepository;
 import com.alliz.account.AccountService;
-import com.alliz.account.SignUpForm;
+import com.alliz.account.dto.SignUpForm;
+import com.alliz.account.Role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
@@ -36,6 +36,7 @@ class MainControllerTest {
         signUpForm.setNickname("user");
         signUpForm.setPassword("aaa123123");
         signUpForm.setPasswordConfirm("aaa123123");
+        signUpForm.setRole(Role.USER);
         accountService.processNewAccount(signUpForm);
     }
 

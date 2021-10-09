@@ -1,7 +1,7 @@
-package com.alliz.domain;
+package com.alliz.account;
 
+import com.alliz.child.Child;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,20 +9,24 @@ import java.util.*;
 
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
-@Builder @AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor @NoArgsConstructor
 @ToString(exclude = "children")
 public class Account {
 
     @Id @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nickname;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     private boolean emailVerified;
 
@@ -32,7 +36,7 @@ public class Account {
 
     private LocalDateTime joinedAt;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private Set<Child> children = new HashSet<>();
 
     private String location;
@@ -57,6 +61,27 @@ public class Account {
 
     private boolean childBringBackByEmail;
 
+    @Builder
+    public Account(String nickname, String email, String profileImage, Role role) {
+        this.nickname = nickname;
+        this.email = email;
+        this.profileImage = profileImage;
+        this.role = role;
+        this.children = new HashSet<>();
+        this.setChildTakingByWeb(true);
+        this.setChildBringBackByWeb(true);
+    }
+
+    public Account update(String nickname, String profileImage) {
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+        return this;
+    }
+
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
+
     public String getBanner() {
         return banner != null ? banner : "/images/default_banner.png";
     }
@@ -77,5 +102,9 @@ public class Account {
 
     public boolean canSendConfirmEmail() {
         return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusMinutes(30));
+    }
+
+    public boolean isAdmin() {
+        return this.getRole().equals(Role.ADMIN);
     }
 }

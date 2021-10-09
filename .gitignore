@@ -39,3 +39,6 @@ out/
 ### NPM ###
 src/main/resources/static/node_modules
 src/main/resources/application-dev.properties
+
+## OAuth2
+application-oauth.yml

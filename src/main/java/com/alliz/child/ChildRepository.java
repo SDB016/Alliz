@@ -1,6 +1,6 @@
-package com.alliz.account;
+package com.alliz.child;
 
-import com.alliz.domain.Child;
+import com.alliz.child.Child;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
